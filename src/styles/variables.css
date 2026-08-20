@@ -57,6 +57,7 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
+  /* LARGURA DA SIDEBAR - CRUCIAL PARA O LAYOUT */
   --sidebar-width: 260px;
   --header-height: 60px;
 }

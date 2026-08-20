@@ -9,7 +9,22 @@ import './style.css';
 function AppLayout() {
   const [data, setData] = useState(() => {
     const stored = loadData();
-    return stored || JSON.parse(JSON.stringify(initialData));
+    if (stored) {
+      return {
+        ...initialData,
+        ...stored,
+        wedding: { ...initialData.wedding, ...stored.wedding },
+        finances: { ...initialData.finances, ...stored.finances },
+        home: { ...initialData.home, ...stored.home },
+        honeymoon: { ...initialData.honeymoon, ...stored.honeymoon },
+        postWedding: { ...initialData.postWedding, ...stored.postWedding },
+        couple: { ...initialData.couple, ...stored.couple },
+        ourStory: stored.ourStory || initialData.ourStory,
+        godparents: stored.godparents || initialData.godparents,
+        participants: stored.participants || initialData.participants,
+      };
+    }
+    return JSON.parse(JSON.stringify(initialData));
   });
 
   useEffect(() => {
@@ -32,7 +47,7 @@ function AppLayout() {
 
   return (
     <div className="app-layout">
-      <Sidebar couple={data.couple} onAddTask={() => {}} onReset={handleReset} updateData={updateData} /> 
+      <Sidebar couple={data.couple} updateData={updateData} onReset={handleReset} />
       <MobileNav couple={data.couple} onReset={handleReset} updateData={updateData} />
       <main className="app-main">
         <Outlet context={{ data, updateData }} />
