@@ -84,9 +84,8 @@ O desafio proposto para este projeto era criar uma aplicação que fosse visualm
 ## 🚀 Como executar o projeto
 
 1. 🌎 Deploy
-   ```bash
-   wedding-registry-two.vercel.app
-   ```
+   [https://wedding-registry-two.vercel.app](https://wedding-registry-two.vercel.app/)
+   
 ---
 <!-- ---------------------------------------------------------------------- -->
 
