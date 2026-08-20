@@ -3,15 +3,18 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Heart, BookOpen, ClipboardList, CalendarDays, Wallet,
   Users, UserCheck, Home, Plane, Store, PartyPopper, Settings,
-  Menu, X, LogOut, Upload
+  Menu, X, LogOut, Upload, Lock
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './style.css';
 
-const navItems = [
+const publicNavItems = [
   { path: '/', label: 'Início', icon: LayoutDashboard },
   { path: '/casamento', label: 'Nosso Casamento', icon: Heart },
   { path: '/nossa-historia', label: 'Nossa História', icon: BookOpen },
+];
+
+const privateNavItems = [
   { path: '/planejamento', label: 'Planejamento', icon: ClipboardList },
   { path: '/cronograma', label: 'Cronograma', icon: CalendarDays },
   { path: '/financeiro', label: 'Financeiro', icon: Wallet },
@@ -47,6 +50,8 @@ function MobileNav({ couple, onReset, updateData }) {
     }
   };
 
+  const navItems = isAuthenticated ? [...publicNavItems, ...privateNavItems] : publicNavItems;
+
   return (
     <div className={`mobile-nav ${isOpen ? 'mobile-open' : ''}`}>
       <div className="mobile-nav-header">
@@ -56,17 +61,19 @@ function MobileNav({ couple, onReset, updateData }) {
               {couple.photoUrl ? (
                 <img src={couple.photoUrl} alt={couple.photoDescription} />
               ) : (
-                <div className="mobile-nav-photo-empty" onClick={() => fileInputRef.current?.click()}>
-                  <Upload size={14} />
+                <div className="mobile-nav-photo-empty">
+                  <Lock size={14} />
                 </div>
               )}
             </div>
-            {couple.photoUrl && (
+            {couple.photoUrl && isAuthenticated && (
               <button className="mobile-nav-photo-remove" onClick={handleRemovePhoto} type="button">
                 <X size={10} />
               </button>
             )}
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
+            {isAuthenticated && (
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
+            )}
           </div>
           <span className="mobile-nav-couple-name">{couple.names}</span>
         </div>
@@ -91,43 +98,50 @@ function MobileNav({ couple, onReset, updateData }) {
               );
             })}
             
-            {isAuthenticated && (
-              <li>
-                <Link to="/configuracoes" className={`mobile-nav-item ${location.pathname === '/configuracoes' ? 'mobile-nav-item-active' : ''}`} onClick={() => setIsOpen(false)}>
-                  <Settings size={18} strokeWidth={1.8} />
-                  <span>Configurações</span>
-                </Link>
-              </li>
+            {!isAuthenticated && (
+              <>
+                <li className="mobile-nav-divider">
+                  <span>Área Restrita</span>
+                </li>
+                <li>
+                  <Link to="/login" className="mobile-nav-item mobile-nav-login" onClick={() => setIsOpen(false)}>
+                    <Lock size={18} strokeWidth={1.8} />
+                    <span>Entrar como noivos</span>
+                  </Link>
+                </li>
+              </>
             )}
 
-            <li>
-              <button className="mobile-nav-item mobile-nav-photo-upload" onClick={() => fileInputRef.current?.click()} type="button">
-                <Upload size={18} strokeWidth={1.8} />
-                <span>{couple.photoUrl ? 'Trocar foto' : 'Adicionar foto'}</span>
-              </button>
-            </li>
-            
-            <li>
-              {isAuthenticated ? (
-                <button className="mobile-nav-item mobile-nav-reset" onClick={() => { logout(); setIsOpen(false); }}>
-                  <LogOut size={18} strokeWidth={1.8} />
-                  <span>Sair</span>
-                </button>
-              ) : (
-                <button className="mobile-nav-item mobile-nav-login" onClick={() => { window.location.href = '/login'; setIsOpen(false); }}>
-                  <LogOut size={18} strokeWidth={1.8} />
-                  <span>Entrar</span>
-                </button>
-              )}
-            </li>
-            
             {isAuthenticated && (
-              <li>
-                <button className="mobile-nav-item mobile-nav-reset" onClick={() => { onReset(); setIsOpen(false); }}>
-                  <X size={18} strokeWidth={1.8} />
-                  <span>Resetar dados</span>
-                </button>
-              </li>
+              <>
+                <li>
+                  <Link to="/configuracoes" className={`mobile-nav-item ${location.pathname === '/configuracoes' ? 'mobile-nav-item-active' : ''}`} onClick={() => setIsOpen(false)}>
+                    <Settings size={18} strokeWidth={1.8} />
+                    <span>Configurações</span>
+                  </Link>
+                </li>
+                
+                <li>
+                  <button className="mobile-nav-item mobile-nav-photo-upload" onClick={() => fileInputRef.current?.click()} type="button">
+                    <Upload size={18} strokeWidth={1.8} />
+                    <span>{couple.photoUrl ? 'Trocar foto' : 'Adicionar foto'}</span>
+                  </button>
+                </li>
+                
+                <li>
+                  <button className="mobile-nav-item mobile-nav-logout" onClick={() => { logout(); setIsOpen(false); }}>
+                    <LogOut size={18} strokeWidth={1.8} />
+                    <span>Sair</span>
+                  </button>
+                </li>
+                
+                <li>
+                  <button className="mobile-nav-item mobile-nav-reset" onClick={() => { onReset(); setIsOpen(false); }}>
+                    <X size={18} strokeWidth={1.8} />
+                    <span>Resetar dados</span>
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         </nav>
