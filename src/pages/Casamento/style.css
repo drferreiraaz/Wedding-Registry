@@ -1,8 +1,72 @@
+/* ==========================================
+   PÁGINA NOSSO CASAMENTO - CSS COMPLETO
+   ========================================== */
+
+/* Container principal da página */
 .wedding {
   padding: var(--spacing-xl);
-  max-width: 1100px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
+/* Header simples da página */
+.page-header-simple {
+  margin-bottom: var(--spacing-xl);
+}
+
+.page-header-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+  display: block;
+}
+
+.page-header-title {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.page-header-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+
+/* Toolbar de administração */
+.admin-toolbar {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.admin-btn-small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.admin-btn-small:hover {
+  background: var(--color-border-light);
+  color: var(--color-primary);
+}
+
+/* Hero section - área principal */
 .wedding-hero {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border-light);
@@ -16,6 +80,7 @@
 
 .wedding-hero-content {
   flex: 1;
+  min-width: 0; /* Permite que o conteúdo encolha */
 }
 
 .wedding-hero-title {
@@ -31,7 +96,7 @@
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin-bottom: var(--spacing-xl);
-  max-width: 500px;
+  max-width: 600px;
 }
 
 .wedding-hero-details {
@@ -48,11 +113,14 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 120px;
 }
 
 .wedding-detail-label {
   font-size: 0.75rem;
   color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .wedding-detail-value {
@@ -62,6 +130,7 @@
   color: var(--color-text-primary);
 }
 
+/* Área de imagem do vestido */
 .wedding-hero-image {
   width: 280px;
   height: 220px;
@@ -70,17 +139,50 @@
   overflow: hidden;
 }
 
-.wedding-hero-image-placeholder {
+.wedding-hero-img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   border-radius: var(--radius-md);
-  border: none;
 }
 
+.wedding-hero-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-alt);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: var(--spacing-md);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.wedding-hero-placeholder:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Formulário de edição */
+.wedding-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Grid de informações/cards */
 .wedding-info-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
 }
 
 .wedding-info-card {
@@ -88,6 +190,11 @@
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
+  transition: box-shadow 0.2s ease;
+}
+
+.wedding-info-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .wedding-info-title {
@@ -104,10 +211,278 @@
   line-height: 1.6;
 }
 
+/* Card de história (story card) */
+.story-card {
+  position: relative;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  transition: all 0.2s ease;
+}
+
+.story-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.story-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.story-card-image-placeholder {
+  width: 100%;
+  height: 150px;
+  background-color: var(--color-surface-alt);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+  padding: var(--spacing-md);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.story-card-image-placeholder:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Botões de administração do card */
+.story-card-admin {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+
+.story-card:hover .story-card-admin {
+  opacity: 1;
+}
+
+.story-card-admin button {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.story-card-admin button:hover {
+  background: var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+.story-card-admin button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.story-card-admin button.danger:hover {
+  background: var(--color-badge-high);
+  color: var(--color-badge-high-text);
+}
+
+/* Modal de edição */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-primary);
+}
+
+.modal-body {
+  padding: var(--spacing-lg);
+}
+
+/* Formulários */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--spacing-md);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  width: 100%;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.form-actions-right {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.form-btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.form-btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.form-btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.form-btn-secondary {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.form-btn-secondary:hover {
+  background-color: var(--color-border-light);
+}
+
+/* ==========================================
+   RESPONSIVIDADE
+   ========================================== */
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+  .wedding-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Celulares grandes e tablets pequenos */
 @media (max-width: 900px) {
+  .wedding {
+    padding: var(--spacing-lg);
+  }
+
   .wedding-hero {
     flex-direction: column;
     text-align: center;
+    padding: var(--spacing-xl);
+  }
+
+  .wedding-hero-content {
+    width: 100%;
   }
 
   .wedding-hero-text {
@@ -122,17 +497,26 @@
   .wedding-hero-image {
     width: 100%;
     max-width: 400px;
-    height: 200px;
+    height: 250px;
   }
 
   .wedding-info-grid {
     grid-template-columns: 1fr;
   }
+
+  .admin-toolbar {
+    justify-content: center;
+  }
 }
 
+/* Celulares pequenos */
 @media (max-width: 600px) {
   .wedding {
     padding: var(--spacing-md);
+  }
+
+  .page-header-title {
+    font-size: 1.8rem;
   }
 
   .wedding-hero {
@@ -140,6 +524,53 @@
   }
 
   .wedding-hero-title {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+  }
+
+  .wedding-hero-text {
+    font-size: 0.9rem;
+  }
+
+  .wedding-detail-card {
+    padding: var(--spacing-sm) var(--spacing-md);
+    min-width: 100px;
+  }
+
+  .wedding-detail-value {
+    font-size: 1rem;
+  }
+
+  .wedding-info-card {
+    padding: var(--spacing-md);
+  }
+
+  .story-card {
+    padding: var(--spacing-md);
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    max-width: 100%;
+    margin: var(--spacing-sm);
+  }
+
+  .admin-btn-small {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Celulares muito pequenos */
+@media (max-width: 400px) {
+  .wedding-hero-details {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .wedding-detail-card {
+    width: 100%;
   }
 }
