@@ -1,76 +1,30 @@
-import './style.css';
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import PhaseCard from '../../components/PhaseCard/PhaseCard';
 import StatsGrid from '../../components/StatsGrid/StatsGrid';
 import NextMission from '../../components/NextMission/NextMission';
 import ImagePlaceholder from '../../components/ImagePlaceholder/ImagePlaceholder';
 import { calculateOverallProgress, calculateDaysUntil } from '../../utils/calculations';
-import { Calendar, Edit3, Upload, X } from 'lucide-react';
+import { Calendar, Edit3, Lock } from 'lucide-react';
+import './style.css';
 
 function Dashboard() {
   const { data, updateData } = useOutletContext();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const overallProgress = calculateOverallProgress(data.phases);
-  const [editingDate, setEditingDate] = useState(false);
-  const [tempDate, setTempDate] = useState(data.wedding.date || '');
-  const fileInputRef = useRef(null);
-
   const daysUntil = data.wedding.date ? calculateDaysUntil(data.wedding.date) : 0;
-
-  const handleSaveDate = () => {
-    if (tempDate) {
-      const date = new Date(tempDate + 'T00:00:00');
-      const formatted = date.toLocaleDateString('pt-BR');
-      updateData((prev) => ({
-        ...prev,
-        wedding: {
-          ...prev.wedding,
-          date: tempDate,
-          dateFormatted: formatted,
-        },
-      }));
-    }
-    setEditingDate(false);
-  };
 
   const handlePhotoUpload = (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      alert('Por favor, selecione uma imagem válida.');
+    if (!file || !file.type.startsWith('image/') || file.size > 3 * 1024 * 1024) {
+      alert('Selecione uma imagem válida de até 3MB.');
       return;
     }
-
-    if (file.size > 4 * 1024 * 1024) {
-      alert('A imagem é muito grande. O limite é 4MB para não estourar o localStorage.');
-      return;
-    }
-
     const reader = new FileReader();
-    reader.onload = (event) => {
-      updateData((prev) => ({
-        ...prev,
-        wedding: {
-          ...prev.wedding,
-          dressPhotoUrl: event.target.result,
-        },
-      }));
-    };
+    reader.onload = (event) => updateData(prev => ({ ...prev, wedding: { ...prev.wedding, dressPhotoUrl: event.target.result } }));
     reader.readAsDataURL(file);
-  };
-
-  const handleRemovePhoto = () => {
-    if (window.confirm('Remover a foto do vestido?')) {
-      updateData((prev) => ({
-        ...prev,
-        wedding: {
-          ...prev.wedding,
-          dressPhotoUrl: null,
-        },
-      }));
-    }
   };
 
   return (
@@ -81,31 +35,12 @@ function Dashboard() {
           <p className="dashboard-hero-text">{data.wedding.tagline}</p>
 
           <div className="dashboard-hero-date">
-            {editingDate ? (
-              <div className="dashboard-date-edit">
-                <input
-                  type="date"
-                  value={tempDate}
-                  onChange={(e) => setTempDate(e.target.value)}
-                  className="dashboard-date-input"
-                />
-                <button className="dashboard-date-save" onClick={handleSaveDate}>Salvar</button>
-                <button className="dashboard-date-cancel" onClick={() => setEditingDate(false)}>Cancelar</button>
-              </div>
-            ) : (
-              <div className="dashboard-date-display">
-                <Calendar size={16} />
-                <span className="dashboard-date-text">
-                  {data.wedding.dateFormatted || 'Data não definida'}
-                </span>
-                <button className="dashboard-date-edit-btn" onClick={() => {
-                  setTempDate(data.wedding.date || '');
-                  setEditingDate(true);
-                }}>
-                  <Edit3 size={12} />
-                </button>
-              </div>
-            )}
+            <div className="dashboard-date-display">
+              <Calendar size={16} />
+              <span className="dashboard-date-text">
+                {data.wedding.dateFormatted || 'Data não definida'}
+              </span>
+            </div>
             {data.wedding.date && (
               <span className="dashboard-countdown">{daysUntil} dias até o grande dia</span>
             )}
@@ -126,53 +61,34 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-hero-image">
-          {data.wedding.dressPhotoUrl ? (
-            <div className="dashboard-dress-photo">
-              <img
-                src={data.wedding.dressPhotoUrl}
-                alt="Foto do vestido de noiva"
-                className="dashboard-dress-photo-img"
-              />
-              <div className="dashboard-dress-photo-overlay">
-                <button
-                  className="dashboard-dress-photo-btn dashboard-dress-photo-btn-remove"
-                  onClick={handleRemovePhoto}
-                  title="Remover foto"
-                >
-                  <X size={16} />
-                </button>
-                <button
-                  className="dashboard-dress-photo-btn dashboard-dress-photo-btn-change"
-                  onClick={() => fileInputRef.current?.click()}
-                  title="Trocar foto"
-                >
-                  <Upload size={16} />
-                </button>
-              </div>
-            </div>
-          ) : (
+          {isAuthenticated ? (
             <div className="dashboard-dress-upload">
-              <ImagePlaceholder
-                description="Foto do vestido de noiva"
-                className="dashboard-hero-image-placeholder"
-              />
-              <button
-                className="dashboard-dress-upload-btn"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Upload size={16} />
-                <span>Adicionar foto</span>
-              </button>
+              {data.wedding.dressPhotoUrl ? (
+                <img src={data.wedding.dressPhotoUrl} alt="Vestido de noiva" className="dashboard-dress-img" />
+              ) : (
+                <ImagePlaceholder
+                  description="Foto do vestido de noiva"
+                  className="dashboard-hero-image-placeholder"
+                />
+              )}
+              <label className="dashboard-dress-upload-btn">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  style={{ display: 'none' }}
+                />
+                <span>📷 {data.wedding.dressPhotoUrl ? 'Trocar foto' : 'Adicionar foto'}</span>
+              </label>
+            </div>
+          ) : data.wedding.dressPhotoUrl ? (
+            <img src={data.wedding.dressPhotoUrl} alt="Vestido de noiva" className="dashboard-dress-img" />
+          ) : (
+            <div className="dashboard-locked-content">
+              <Lock size={32} />
+              <span>Faça login para ver</span>
             </div>
           )}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoUpload}
-            style={{ display: 'none' }}
-            aria-label="Selecionar foto do vestido"
-          />
         </div>
       </div>
 
@@ -188,28 +104,62 @@ function Dashboard() {
           <h2 className="dashboard-section-title">Nosso caminho até o "sim"</h2>
           <div className="dashboard-phases-list">
             {data.phases.slice(0, 4).map((phase) => (
-              <PhaseCard
-                key={phase.id}
-                phase={phase}
-                onClick={() => navigate('/planejamento')}
-              />
+              <div key={phase.id} className={!isAuthenticated ? 'dashboard-phase-locked' : ''}>
+                {isAuthenticated ? (
+                  <PhaseCard
+                    phase={phase}
+                    onClick={() => navigate('/planejamento')}
+                  />
+                ) : (
+                  <div className="phase-card phase-card-locked">
+                    <div className="phase-card-header">
+                      <div className="phase-card-icon">
+                        <Lock size={16} />
+                      </div>
+                      <h3 className="phase-card-title">
+                        {phase.number}. {phase.name}
+                      </h3>
+                    </div>
+                    <div className="phase-card-body">
+                      <div className="phase-card-locked-message">
+                        <Lock size={14} />
+                        <span>Área restrita aos noivos</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
-          <button className="dashboard-phases-more" onClick={() => navigate('/planejamento')}>
-            Ver todas as 10 fases
-          </button>
+          {isAuthenticated ? (
+            <button className="dashboard-phases-more" onClick={() => navigate('/planejamento')}>
+              Ver todas as 10 fases
+            </button>
+          ) : (
+            <div className="dashboard-phases-more dashboard-phases-more-locked">
+              <Lock size={14} />
+              <span>Faça login para ver todas as fases</span>
+            </div>
+          )}
         </div>
 
         <div className="dashboard-focus">
           <h2 className="dashboard-section-title">Foco Atual</h2>
-          {data.phases.some(p => p.tasks.length > 0) ? (
-            <NextMission phases={data.phases} weddingDate={data.wedding.date} />
+          {isAuthenticated ? (
+            data.phases.some(p => p.tasks.length > 0) ? (
+              <NextMission phases={data.phases} weddingDate={data.wedding.date} />
+            ) : (
+              <div className="dashboard-empty-focus">
+                <p>Nenhuma tarefa criada ainda.</p>
+                <button className="dashboard-empty-focus-btn" onClick={() => navigate('/planejamento')}>
+                  Começar planejamento
+                </button>
+              </div>
+            )
           ) : (
-            <div className="dashboard-empty-focus">
-              <p>Nenhuma tarefa criada ainda.</p>
-              <button className="dashboard-empty-focus-btn" onClick={() => navigate('/planejamento')}>
-                Começar planejamento
-              </button>
+            <div className="dashboard-locked-focus">
+              <Lock size={32} />
+              <p>Faça login para ver o foco atual</p>
             </div>
           )}
 

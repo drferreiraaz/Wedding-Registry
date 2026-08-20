@@ -407,3 +407,117 @@
 .dashboard-dress-upload-btn:hover {
   background-color: var(--color-primary-hover);
 }
+
+/* Conteúdo bloqueado para visitantes */
+.dashboard-locked-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface-alt);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.dashboard-locked-content svg {
+  opacity: 0.5;
+}
+
+.dashboard-dress-upload {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard-dress-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.dashboard-dress-upload-btn {
+  position: absolute;
+  bottom: var(--spacing-sm);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 6px 14px;
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dashboard-dress-upload-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Cards de fase bloqueados */
+.dashboard-phase-locked {
+  pointer-events: none;
+  user-select: none;
+}
+
+.phase-card-locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.phase-card-locked .phase-card-icon {
+  background-color: var(--color-surface-alt) !important;
+  border: 1.5px solid var(--color-border) !important;
+  color: var(--color-text-muted) !important;
+}
+
+.phase-card-locked-message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.dashboard-phases-more-locked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--color-surface-alt);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  cursor: not-allowed;
+}
+
+.dashboard-locked-focus {
+  background-color: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.dashboard-locked-focus svg {
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
+}
+
+.dashboard-locked-focus p {
+  font-size: 0.9rem;
+}

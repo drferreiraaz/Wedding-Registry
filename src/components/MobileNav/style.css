@@ -163,6 +163,50 @@
   background-color: var(--color-primary-lighter);
 }
 
+.mobile-nav-divider {
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  margin-top: var(--spacing-sm);
+}
+
+.mobile-nav-login {
+  color: var(--color-primary);
+  font-weight: 600;
+  background-color: var(--color-primary-lighter);
+}
+
+.mobile-nav-login:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.mobile-nav-logout {
+  color: var(--color-danger);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+}
+
+.mobile-nav-logout:hover {
+  background-color: var(--color-badge-high);
+}
+
+.mobile-nav-photo-empty {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-surface-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-full);
+}
+
 @media (max-width: 900px) {
   .mobile-nav {
     display: block;
