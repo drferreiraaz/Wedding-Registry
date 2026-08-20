@@ -1,0 +1,260 @@
+.sidebar {
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background-color: var(--color-sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: var(--spacing-md);
+}
+
+.sidebar-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--spacing-sm);
+  border: 3px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sidebar-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  border: none;
+  padding: var(--spacing-xs);
+}
+
+.sidebar-photo-placeholder .image-placeholder-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-photo-placeholder .image-placeholder-text {
+  display: none;
+}
+
+.sidebar-couple-name {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.sidebar-couple-subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.sidebar-nav {
+  flex: 1;
+}
+
+.sidebar-nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-primary);
+}
+
+.sidebar-nav-item-active {
+  background-color: var(--color-sidebar-active);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  border-left-color: var(--color-primary);
+}
+
+.sidebar-footer {
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.sidebar-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-add-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.sidebar-reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: 10px;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-top: var(--spacing-sm);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-reset-btn:hover {
+  background-color: var(--color-badge-high);
+  color: var(--color-badge-high-text);
+  border-color: var(--color-badge-high-text);
+}
+
+/* ===== Upload de foto do casal ===== */
+.sidebar-photo-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.sidebar-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 3px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.sidebar-photo:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.sidebar-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sidebar-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  border: none;
+  padding: var(--spacing-xs);
+}
+
+.sidebar-photo-placeholder .image-placeholder-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-photo-placeholder .image-placeholder-text {
+  display: none;
+}
+
+.sidebar-photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+  border-radius: var(--radius-full);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-photo-wrapper:hover .sidebar-photo-overlay {
+  opacity: 1;
+}
+
+.sidebar-photo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.95);
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+}
+
+.sidebar-photo-btn:hover {
+  background-color: #fff;
+  transform: scale(1.1);
+}
+
+.sidebar-photo-btn-remove:hover {
+  color: var(--color-danger);
+}
+
+.sidebar-photo-btn-change:hover {
+  color: var(--color-primary);
+}
+
+.sidebar-photo-upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-photo-upload-btn:hover {
+  background-color: var(--color-primary-hover);
+}
