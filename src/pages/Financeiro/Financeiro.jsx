@@ -1,4 +1,3 @@
-import './style.css';
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader/PageHeader';
@@ -108,57 +107,57 @@ function Financeiro() {
   };
 
   return (
-    <div className="finance" id="finance-summary">
+    <div className="p-xl max-w-[1100px] max-mobile:p-md" id="finance-summary">
       <PageHeader title="Financeiro" subtitle="Controle completo dos gastos do casamento" />
 
-      <div className="finance-card finance-card-budget">
-  <span className="finance-card-label">Orçamento Total</span>
-  {editingBudget ? (
-    <div className="finance-budget-edit">
-      <input
-        type="number"
-        value={tempBudget}
-        onChange={(e) => setTempBudget(e.target.value)}
-        className="finance-budget-input"
-        min="0"
-      />
-      <button className="finance-budget-save" onClick={handleSaveBudget}>OK</button>
-      <button className="finance-budget-cancel" onClick={() => setEditingBudget(false)}>✕</button>
-    </div>
-  ) : (
-    <div className="finance-budget-display">
-      <span className="finance-card-value">{formatCurrency(totalBudget)}</span>
-      <button className="finance-budget-edit-btn" onClick={() => {
-        setTempBudget(totalBudget.toString());
-        setEditingBudget(true);
-      }}>
-        <Edit3 size={12} />
-      </button>
-    </div>
-  )}
-</div>
+      <div className="bg-surface border border-border-light rounded-md p-lg flex flex-col gap-xs">
+        <span className="text-[0.8rem] text-text-secondary">Orçamento Total</span>
+        {editingBudget ? (
+          <div className="flex items-center gap-[4px]">
+            <input
+              type="number"
+              value={tempBudget}
+              onChange={(e) => setTempBudget(e.target.value)}
+              className="w-[100px] px-sm py-[4px] border border-border rounded-sm text-[0.85rem] text-text-primary bg-surface focus:outline-none focus:border-primary"
+              min="0"
+            />
+            <button className="px-sm py-[4px] bg-primary text-white rounded-sm text-[0.75rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={handleSaveBudget}>OK</button>
+            <button className="px-sm py-[4px] bg-surface-alt text-text-secondary border border-border rounded-sm text-[0.75rem] transition-colors duration-200 ease-[ease] hover:bg-border-light" onClick={() => setEditingBudget(false)}>✕</button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-sm">
+            <span className="font-serif text-[1.3rem] font-semibold text-text-primary">{formatCurrency(totalBudget)}</span>
+            <button className="flex items-center justify-center w-6 h-6 rounded-sm text-text-muted transition-all duration-200 ease-[ease] shrink-0 hover:bg-border-light hover:text-primary" onClick={() => {
+              setTempBudget(totalBudget.toString());
+              setEditingBudget(true);
+            }}>
+              <Edit3 size={12} />
+            </button>
+          </div>
+        )}
+      </div>
 
-      <div className="finance-progress-section">
-        <div className="finance-progress-header">
-          <span className="finance-progress-label">Utilização do orçamento</span>
-          <span className="finance-progress-value">
+      <div className="bg-surface border border-border-light rounded-md p-lg mb-xl">
+        <div className="flex justify-between items-center mb-sm">
+          <span className="text-[0.85rem] text-text-secondary">Utilização do orçamento</span>
+          <span className="font-serif text-[1.1rem] font-semibold text-primary">
             {totalBudget > 0 ? Math.round((totalExpenses / totalBudget) * 100) : 0}%
           </span>
         </div>
-        <div className="finance-progress-track">
+        <div className="w-full h-[6px] bg-progress-track rounded-[3px] overflow-hidden">
           <div
-            className="finance-progress-fill"
+            className="h-full bg-primary rounded-[3px] transition-[width] duration-[400ms] ease-[ease]"
             style={{ width: `${totalBudget > 0 ? Math.min((totalExpenses / totalBudget) * 100, 100) : 0}%` }}
           />
         </div>
       </div>
 
-      <div className="finance-content">
-        <div className="finance-toolbar">
-          <h2 className="finance-section-title">Despesas</h2>
-          <div className="finance-toolbar-actions">
+      <div className="bg-surface border border-border-light rounded-lg p-lg">
+        <div className="flex items-center justify-between mb-lg flex-wrap gap-md max-mobile:flex-col max-mobile:items-start">
+          <h2 className="font-serif text-[1.2rem] font-semibold text-text-primary">Despesas</h2>
+          <div className="flex items-center gap-sm">
             <select
-              className="finance-filter"
+              className="px-[12px] py-sm border border-border rounded-sm text-[0.85rem] text-text-secondary bg-surface"
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
             >
@@ -167,52 +166,52 @@ function Financeiro() {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <button className="finance-add-btn" onClick={openNew}>
+            <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
               <Plus size={16} />
               <span>Nova Despesa</span>
             </button>
           </div>
         </div>
 
-        <div className="finance-table-wrapper">
-          <table className="finance-table">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Categoria</th>
-                <th>Valor</th>
-                <th>Data</th>
-                <th>Status</th>
-                <th>Ações</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Nome</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Categoria</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Valor</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Data</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Status</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Ações</th>
               </tr>
             </thead>
             <tbody>
               {filteredExpenses.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="finance-empty">
+                  <td colSpan="6" className="text-center p-xl text-text-muted italic">
                     Nenhuma despesa cadastrada
                   </td>
                 </tr>
               ) : (
                 filteredExpenses.map((expense) => (
                   <tr key={expense.id}>
-                    <td className="finance-table-name">{expense.name}</td>
-                    <td>
-                      <span className="finance-category-badge">{expense.category}</span>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light font-medium">{expense.name}</td>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">
+                      <span className="inline-block px-[10px] py-[2px] bg-primary-lighter text-primary rounded-[20px] text-[0.75rem] font-medium">{expense.category}</span>
                     </td>
-                    <td className="finance-table-value">{formatCurrency(expense.value)}</td>
-                    <td>{expense.date ? new Date(expense.date + 'T00:00:00').toLocaleDateString('pt-BR') : '-'}</td>
-                    <td>
-                      <span className={`finance-status-badge finance-status-${expense.status.toLowerCase().replace(' ', '-')}`}>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light font-semibold font-sans">{formatCurrency(expense.value)}</td>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">{expense.date ? new Date(expense.date + 'T00:00:00').toLocaleDateString('pt-BR') : '-'}</td>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">
+                      <span className={`inline-block px-[10px] py-[3px] rounded-[20px] text-[0.7rem] font-medium ${expense.status === 'Pago' ? 'bg-badge-done text-badge-done-text' : expense.status === 'Parcial' ? 'bg-badge-progress text-badge-progress-text' : 'bg-badge-pending text-badge-pending-text'}`}>
                         {expense.status}
                       </span>
                     </td>
-                    <td>
-                      <div className="finance-table-actions">
-                        <button className="finance-action-btn" onClick={() => openEdit(expense)} aria-label="Editar">
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">
+                      <div className="flex gap-[4px]">
+                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-text-primary" onClick={() => openEdit(expense)} aria-label="Editar">
                           <Edit3 size={14} />
                         </button>
-                        <button className="finance-action-btn finance-action-btn-danger" onClick={() => handleDelete(expense.id)} aria-label="Excluir">
+                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(expense.id)} aria-label="Excluir">
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -230,7 +229,7 @@ function Financeiro() {
         onClose={() => setModalOpen(false)}
         title={editingExpense ? 'Editar Despesa' : 'Nova Despesa'}
       >
-        <div className="finance-modal-form">
+        <div className="flex flex-col gap-md">
           <div className="form-group">
             <label className="form-label" htmlFor="exp-name">Nome</label>
             <input

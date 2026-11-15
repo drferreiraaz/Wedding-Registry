@@ -2,14 +2,13 @@ import React from 'react';
 import { Wallet, Users, Calendar, Heart } from 'lucide-react';
 import StatCard from '../StatCard/StatCard';
 import { formatCurrency, calculateDaysUntil } from '../../utils/calculations';
-import './style.css';
 
 function StatsGrid({ finances, guests, weddingDate, expenses }) {
   const totalExpenses = expenses.reduce((sum, exp) => sum + (exp.value || 0), 0);
   const daysUntil = calculateDaysUntil(weddingDate);
 
   return (
-    <div className="stats-grid" id="stats-grid">
+    <div className="grid grid-cols-4 gap-md max-lg:grid-cols-2 max-mobile:grid-cols-1" id="stats-grid">
       <StatCard
         icon={<Wallet size={20} />}
         label="Financeiro"

@@ -4,7 +4,6 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { getGuestStats } from '../../utils/calculations';
 import { Plus, Trash2, Edit3, Search } from 'lucide-react';
-import './style.css';
 
 function Convidados() {
   const { data, updateData } = useOutletContext();
@@ -81,43 +80,43 @@ function Convidados() {
   };
 
   return (
-    <div className="guests" id="guest-statistics">
+    <div className="p-xl max-w-[1100px] max-mobile:p-md" id="guest-statistics">
       <PageHeader title="Convidados" subtitle="Gerencie sua lista de convidados" />
 
-      <div className="guests-stats">
-        <div className="guests-stat-card">
-          <span className="guests-stat-value">{stats.total}</span>
-          <span className="guests-stat-label">Total</span>
+      <div className="grid grid-cols-4 gap-md mb-xl max-nav:grid-cols-2 max-mobile:grid-cols-2">
+        <div className="bg-surface border border-border-light rounded-md p-lg flex flex-col items-center gap-xs">
+          <span className="font-serif text-[1.8rem] font-bold text-text-primary">{stats.total}</span>
+          <span className="text-[0.8rem] text-text-secondary">Total</span>
         </div>
-        <div className="guests-stat-card guests-stat-confirmed">
-          <span className="guests-stat-value">{stats.confirmed}</span>
-          <span className="guests-stat-label">Confirmados</span>
+        <div className="bg-surface border border-border-light rounded-md p-lg flex flex-col items-center gap-xs">
+          <span className="font-serif text-[1.8rem] font-bold text-success">{stats.confirmed}</span>
+          <span className="text-[0.8rem] text-text-secondary">Confirmados</span>
         </div>
-        <div className="guests-stat-card guests-stat-pending">
-          <span className="guests-stat-value">{stats.pending}</span>
-          <span className="guests-stat-label">Pendentes</span>
+        <div className="bg-surface border border-border-light rounded-md p-lg flex flex-col items-center gap-xs">
+          <span className="font-serif text-[1.8rem] font-bold text-warning">{stats.pending}</span>
+          <span className="text-[0.8rem] text-text-secondary">Pendentes</span>
         </div>
-        <div className="guests-stat-card guests-stat-declined">
-          <span className="guests-stat-value">{stats.declined}</span>
-          <span className="guests-stat-label">Recusaram</span>
+        <div className="bg-surface border border-border-light rounded-md p-lg flex flex-col items-center gap-xs">
+          <span className="font-serif text-[1.8rem] font-bold text-danger">{stats.declined}</span>
+          <span className="text-[0.8rem] text-text-secondary">Recusaram</span>
         </div>
       </div>
 
-      <div className="guests-content">
-        <div className="guests-toolbar">
-          <div className="guests-search">
+      <div className="bg-surface border border-border-light rounded-lg p-lg">
+        <div className="flex items-center justify-between mb-lg flex-wrap gap-md max-mobile:flex-col max-mobile:items-start">
+          <div className="flex items-center gap-sm px-[12px] py-sm border border-border rounded-sm bg-surface text-text-muted">
             <Search size={16} />
             <input
               type="text"
               placeholder="Buscar convidado..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="guests-search-input"
+              className="border-none outline-none text-[0.85rem] text-text-primary bg-transparent w-[200px]"
             />
           </div>
-          <div className="guests-toolbar-actions">
+          <div className="flex items-center gap-sm">
             <select
-              className="guests-filter"
+              className="px-[12px] py-sm border border-border rounded-sm text-[0.85rem] text-text-secondary bg-surface"
               value={filterRsvp}
               onChange={(e) => setFilterRsvp(e.target.value)}
             >
@@ -126,50 +125,50 @@ function Convidados() {
               <option value="Pendente">Pendentes</option>
               <option value="Recusou">Recusaram</option>
             </select>
-            <button className="guests-add-btn" onClick={openNew}>
+            <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
               <Plus size={16} />
               <span>Novo Convidado</span>
             </button>
           </div>
         </div>
 
-        <div className="guests-table-wrapper">
-          <table className="guests-table">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Família</th>
-                <th>RSVP</th>
-                <th>Mesa</th>
-                <th>Observação</th>
-                <th>Ações</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Nome</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Família</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">RSVP</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Mesa</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Observação</th>
+                <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Ações</th>
               </tr>
             </thead>
             <tbody>
               {filteredGuests.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="guests-empty">
+                  <td colSpan="6" className="text-center p-xl text-text-muted italic">
                     Nenhum convidado encontrado
                   </td>
                 </tr>
               ) : (
                 filteredGuests.map((guest) => (
                   <tr key={guest.id}>
-                    <td className="guests-table-name">{guest.name}</td>
-                    <td>{guest.family}</td>
-                    <td>
-                      <span className={`guests-rsvp-badge guests-rsvp-${guest.rsvp.toLowerCase()}`}>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light font-medium">{guest.name}</td>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">{guest.family}</td>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">
+                      <span className={`inline-block px-[10px] py-[3px] rounded-[20px] text-[0.7rem] font-medium ${guest.rsvp === 'Confirmado' ? 'bg-badge-done text-badge-done-text' : guest.rsvp === 'Recusou' ? 'bg-badge-high text-badge-high-text' : 'bg-badge-pending text-badge-pending-text'}`}>
                         {guest.rsvp}
                       </span>
                     </td>
-                    <td>{guest.table > 0 ? guest.table : '-'}</td>
-                    <td className="guests-table-notes">{guest.notes || '-'}</td>
-                    <td>
-                      <div className="guests-table-actions">
-                        <button className="guests-action-btn" onClick={() => openEdit(guest)} aria-label="Editar">
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">{guest.table > 0 ? guest.table : '-'}</td>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">{guest.notes || '-'}</td>
+                    <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">
+                      <div className="flex gap-[4px]">
+                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-text-primary" onClick={() => openEdit(guest)} aria-label="Editar">
                           <Edit3 size={14} />
                         </button>
-                        <button className="guests-action-btn guests-action-btn-danger" onClick={() => handleDelete(guest.id)} aria-label="Excluir">
+                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(guest.id)} aria-label="Excluir">
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -187,7 +186,7 @@ function Convidados() {
         onClose={() => setModalOpen(false)}
         title={editingGuest ? 'Editar Convidado' : 'Novo Convidado'}
       >
-        <div className="guests-modal-form">
+        <div className="flex flex-col gap-md">
           <div className="form-group">
             <label className="form-label" htmlFor="guest-name">Nome</label>
             <input
