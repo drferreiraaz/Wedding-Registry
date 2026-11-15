@@ -5,7 +5,6 @@ import TaskCard from '../../components/TaskCard/TaskCard';
 import Modal from '../../components/Modal/Modal';
 import { calculatePhaseProgress } from '../../utils/calculations';
 import { ChevronDown, ChevronRight, Plus } from 'lucide-react';
-import './style.css';
 
 function Planejamento() {
   const { data, updateData } = useOutletContext();
@@ -103,10 +102,12 @@ function Planejamento() {
   };
 
   return (
-    <div className="planning" id="planning">
+    <div className="p-xl max-w-[900px] max-mobile:p-md" id="planning">
       <PageHeader title="Planejamento do casamento" />
 
-      <div className="planning-timeline">
+      <div className="relative pl-lg">
+        <div className="absolute left-[7px] top-[20px] bottom-[20px] w-[2px] bg-border-light" aria-hidden="true" />
+
         {data.phases.map((phase) => {
           const progress = calculatePhaseProgress(phase);
           const completedCount = phase.tasks.filter((t) => t.completed).length;
@@ -114,23 +115,23 @@ function Planejamento() {
           const isExpanded = expandedPhase === phase.id;
 
           return (
-            <div key={phase.id} className="planning-phase">
-              <div className="planning-phase-dot" />
+            <div key={phase.id} className="relative mb-lg">
+              <div className="absolute -left-[20px] top-[28px] w-3 h-3 rounded-full bg-primary border-2 border-background z-[1]" />
 
-              <div className="planning-phase-card">
+              <div className="bg-surface border border-border-light rounded-lg overflow-hidden">
                 <button
-                  className="planning-phase-header"
+                  className="flex items-center justify-between p-lg w-full text-left bg-transparent border-none cursor-pointer transition-colors duration-200 ease-[ease] hover:bg-surface-alt max-mobile:flex-col max-mobile:items-start max-mobile:gap-sm"
                   onClick={() => setExpandedPhase(isExpanded ? null : phase.id)}
                   aria-expanded={isExpanded}
                 >
-                  <div className="planning-phase-header-left">
-                    <span className="planning-phase-number">Fase {String(phase.number).padStart(2, '0')}</span>
-                    <h2 className="planning-phase-name">{phase.name}</h2>
+                  <div className="flex flex-col gap-[2px]">
+                    <span className="text-[0.7rem] text-text-muted font-medium tracking-[0.5px]">Fase {String(phase.number).padStart(2, '0')}</span>
+                    <h2 className="font-serif text-[1.4rem] font-semibold text-text-primary">{phase.name}</h2>
                   </div>
-                  <div className="planning-phase-header-right">
-                    <div className="planning-phase-progress-text">
-                      <span className="planning-phase-progress-value">{progress}%</span>
-                      <span className="planning-phase-progress-count">
+                  <div className="flex items-center gap-md text-text-muted">
+                    <div className="flex flex-col items-end gap-[2px]">
+                      <span className="font-serif text-[1.3rem] font-semibold text-primary">{progress}%</span>
+                      <span className="text-[0.75rem] text-text-muted">
                         {completedCount}/{totalCount} concluídas
                       </span>
                     </div>
@@ -139,15 +140,15 @@ function Planejamento() {
                 </button>
 
                 {isExpanded && (
-                  <div className="planning-phase-body">
-                    <div className="planning-phase-progress-bar">
+                  <div className="px-lg pb-lg border-t border-border-light">
+                    <div className="w-full h-1 bg-progress-track rounded-[2px] overflow-hidden my-md">
                       <div
-                        className="planning-phase-progress-fill"
+                        className="h-full bg-primary rounded-[2px] transition-[width] duration-[400ms] ease-[ease]"
                         style={{ width: `${progress}%` }}
                       />
                     </div>
 
-                    <div className="planning-tasks">
+                    <div className="flex flex-col gap-sm mb-md">
                       {phase.tasks.map((task) => (
                         <TaskCard
                           key={task.id}
@@ -159,7 +160,7 @@ function Planejamento() {
                     </div>
 
                     <button
-                      className="planning-add-task"
+                      className="flex items-center gap-sm px-md py-sm text-[0.85rem] text-text-secondary rounded-sm transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary"
                       onClick={() => openNewTask(phase.id)}
                     >
                       <Plus size={16} />
@@ -178,7 +179,7 @@ function Planejamento() {
         onClose={() => setModalOpen(false)}
         title={editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}
       >
-        <div className="planning-modal-form">
+        <div className="flex flex-col gap-md">
           <div className="form-group">
             <label className="form-label" htmlFor="task-title">Título</label>
             <input

@@ -1,4 +1,3 @@
-import './style.css';
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader/PageHeader';
@@ -133,21 +132,22 @@ function Cronograma() {
   };
 
   return (
-    <div className="timeline" id="timeline">
+    <div className="p-xl max-w-[800px] max-mobile:p-md" id="timeline">
       <PageHeader title="Cronograma" subtitle="Linha do tempo do planejamento" />
 
-      <div className="timeline-toolbar">
-        <button className="timeline-add-btn" onClick={openNewItem}>
+      <div className="flex justify-end mb-lg">
+        <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNewItem}>
           <Plus size={16} />
           <span>Novo Marco</span>
         </button>
       </div>
 
-      <div className="timeline-list">
+      <div className="relative pl-lg">
+        <div className="absolute left-[7px] top-[20px] bottom-[20px] w-[2px] bg-border-light" aria-hidden="true" />
         {data.timeline.length === 0 ? (
-          <div className="timeline-empty">
-            <p>Nenhum marco no cronograma ainda.</p>
-            <p className="timeline-empty-sub">Adicione marcos como "12 meses antes", "6 meses antes", etc.</p>
+          <div className="text-center p-3xl text-text-muted">
+            <p className="text-[1rem] mb-sm">Nenhum marco no cronograma ainda.</p>
+            <p className="text-[0.85rem] italic">Adicione marcos como "12 meses antes", "6 meses antes", etc.</p>
           </div>
         ) : (
           data.timeline.map((item) => {
@@ -157,35 +157,35 @@ function Cronograma() {
             const isExpanded = expandedItem === item.id;
 
             return (
-              <div key={item.id} className="timeline-item">
-                <div className="timeline-item-dot" />
+              <div key={item.id} className="relative mb-md">
+                <div className="absolute -left-[20px] top-[24px] w-3 h-3 rounded-full bg-primary border-2 border-background z-[1]" />
 
-                <div className="timeline-item-card">
+                <div className="bg-surface border border-border-light rounded-md overflow-hidden">
                   <button
-                    className="timeline-item-header"
+                    className="flex items-center justify-between px-lg py-md w-full text-left bg-transparent border-none cursor-pointer transition-colors duration-200 ease-[ease] hover:bg-surface-alt"
                     onClick={() => setExpandedItem(isExpanded ? null : item.id)}
                     aria-expanded={isExpanded}
                   >
-                    <div className="timeline-item-header-left">
-                      <span className="timeline-item-label">{item.label}</span>
-                      <h3 className="timeline-item-date">
+                    <div className="flex flex-col gap-[2px]">
+                      <span className="text-[0.75rem] text-text-muted font-medium">{item.label}</span>
+                      <h3 className="font-serif text-[1.1rem] font-semibold text-text-primary">
                         {item.date ? new Date(item.date + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : 'Sem data'}
                       </h3>
                     </div>
-                    <div className="timeline-item-header-right">
-                      <span className="timeline-item-count">
+                    <div className="text-[0.8rem] text-text-muted">
+                      <span className="bg-surface-alt px-[10px] py-[2px] rounded-[20px] text-[0.75rem]">
                         {completedCount}/{totalCount}
                       </span>
                     </div>
                   </button>
 
                   {isExpanded && (
-                    <div className="timeline-item-body">
-                      <div className="timeline-item-actions">
-                        <button className="timeline-item-edit-btn" onClick={() => openEditItem(item)}>
+                    <div className="flex flex-col gap-sm px-lg pb-md pt-md border-t border-border-light">
+                      <div className="flex gap-[4px] mb-sm pb-sm border-b border-border-light">
+                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openEditItem(item)}>
                           <Edit3 size={14} />
                         </button>
-                        <button className="timeline-item-delete-btn" onClick={() => handleDeleteItem(item.id)}>
+                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDeleteItem(item.id)}>
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -194,26 +194,26 @@ function Cronograma() {
                         const key = `${item.id}-${taskIndex}`;
                         const isDone = completedTasks.includes(key);
                         return (
-                          <div key={key} className="timeline-task">
+                          <div key={key} className="group flex items-center gap-sm py-sm">
                             <button
-                              className="timeline-task-check"
+                              className="shrink-0 bg-transparent border-none cursor-pointer p-0 flex items-center"
                               onClick={() => toggleTaskInItem(item.id, taskIndex)}
                               aria-label={isDone ? 'Desmarcar' : 'Marcar como feito'}
                             >
                               {isDone ? (
-                                <CheckCircle size={18} className="timeline-task-check-icon timeline-task-check-done" />
+                                <CheckCircle size={18} className="transition-all duration-200 ease-[ease] text-primary" />
                               ) : (
-                                <Circle size={18} className="timeline-task-check-icon timeline-task-check-empty" />
+                                <Circle size={18} className="transition-all duration-200 ease-[ease] text-border group-hover:text-primary" />
                               )}
                             </button>
-                            <span className={`timeline-task-text ${isDone ? 'timeline-task-text-done' : ''}`}>
+                            <span className={`flex-1 text-[0.9rem] ${isDone ? 'line-through text-text-muted' : 'text-text-primary'}`}>
                               {task}
                             </span>
-                            <div className="timeline-task-actions">
-                              <button className="timeline-task-edit-btn" onClick={() => openEditTask(item.id, taskIndex)}>
+                            <div className="flex gap-[2px] opacity-0 transition-opacity duration-200 ease-[ease] group-hover:opacity-100">
+                              <button className="flex items-center justify-center w-6 h-6 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openEditTask(item.id, taskIndex)}>
                                 <Edit3 size={12} />
                               </button>
-                              <button className="timeline-task-delete-btn" onClick={() => handleDeleteTask(item.id, taskIndex)}>
+                              <button className="flex items-center justify-center w-6 h-6 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDeleteTask(item.id, taskIndex)}>
                                 <Trash2 size={12} />
                               </button>
                             </div>
@@ -221,7 +221,7 @@ function Cronograma() {
                         );
                       })}
 
-                      <button className="timeline-add-task-btn" onClick={() => openNewTask(item.id)}>
+                      <button className="flex items-center gap-sm px-md py-sm mt-sm text-[0.8rem] text-text-muted rounded-sm transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openNewTask(item.id)}>
                         <Plus size={14} />
                         <span>Adicionar tarefa</span>
                       </button>
@@ -239,7 +239,7 @@ function Cronograma() {
         onClose={() => setModalOpen(false)}
         title={editingItem ? 'Editar Marco' : 'Novo Marco'}
       >
-        <div className="timeline-modal-form">
+        <div className="flex flex-col gap-md">
           <div className="form-group">
             <label className="form-label" htmlFor="tl-label">Label</label>
             <input
@@ -282,7 +282,7 @@ function Cronograma() {
         onClose={() => setTaskModalOpen(false)}
         title={editingTask ? 'Editar Tarefa' : 'Nova Tarefa'}
       >
-        <div className="timeline-modal-form">
+        <div className="flex flex-col gap-md">
           <div className="form-group">
             <label className="form-label" htmlFor="task-text">Tarefa</label>
             <input

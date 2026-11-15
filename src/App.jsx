@@ -18,10 +18,6 @@ import PosCasamento from './pages/PosCasamento/PosCasamento';
 import Configuracoes from './pages/Configuracoes/Configuracoes';
 import Login from './pages/Login/Login';
 
-import './styles/variables.css';
-import './styles/global.css';
-
-
 function App() {
   return (
     <AuthProvider>

@@ -4,7 +4,6 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { calculateHomeProgress, formatCurrency } from '../../utils/calculations';
 import { Plus, Trash2, Edit3, Home } from 'lucide-react';
-import './style.css';
 
 function Casa() {
   const { data, updateData } = useOutletContext();
@@ -101,32 +100,32 @@ function Casa() {
   };
 
   return (
-    <div className="home" id="home">
+    <div className="p-xl max-w-[1100px] max-mobile:p-md" id="home">
       <PageHeader title="Nossa Casa" subtitle="Preparando nosso lar juntos" />
 
-      <div className="home-hero">
-        <div className="home-hero-icon">
+      <div className="bg-surface border border-border-light rounded-lg p-xl flex items-center gap-lg mb-xl max-mobile:flex-col max-mobile:text-center">
+        <div className="w-14 h-14 rounded-md bg-primary-lighter flex items-center justify-center text-primary shrink-0">
           <Home size={24} />
         </div>
-        <div className="home-hero-content">
-          <h2 className="home-hero-title">Nossa casa está {homeProgress}% pronta</h2>
-          <p className="home-hero-subtitle">
+        <div className="flex-1">
+          <h2 className="font-serif text-[1.3rem] font-semibold text-text-primary mb-[4px]">Nossa casa está {homeProgress}% pronta</h2>
+          <p className="text-[0.85rem] text-text-secondary">
             {formatCurrency(totalPurchased)} de {formatCurrency(totalEstimated)} investidos
           </p>
         </div>
-        <div className="home-hero-progress">
-          <div className="home-hero-progress-track">
-            <div className="home-hero-progress-fill" style={{ width: `${homeProgress}%` }} />
+        <div className="w-[200px] shrink-0 max-mobile:w-full">
+          <div className="w-full h-2 bg-progress-track rounded-[4px] overflow-hidden">
+            <div className="h-full bg-primary rounded-[4px] transition-[width] duration-[400ms] ease-[ease]" style={{ width: `${homeProgress}%` }} />
           </div>
         </div>
       </div>
 
-      <div className="home-content">
-        <div className="home-toolbar">
-          <h2 className="home-section-title">Itens para a casa</h2>
-          <div className="home-toolbar-actions">
+      <div className="bg-surface border border-border-light rounded-lg p-lg">
+        <div className="flex items-center justify-between mb-lg flex-wrap gap-md max-mobile:flex-col max-mobile:items-start">
+          <h2 className="font-serif text-[1.2rem] font-semibold text-text-primary">Itens para a casa</h2>
+          <div className="flex items-center gap-sm">
             <select
-              className="home-filter"
+              className="px-[12px] py-sm border border-border rounded-sm text-[0.85rem] text-text-secondary bg-surface"
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
             >
@@ -135,43 +134,43 @@ function Casa() {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <button className="home-add-btn" onClick={openNew}>
+            <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
               <Plus size={16} />
               <span>Novo Item</span>
             </button>
           </div>
         </div>
 
-        <div className="home-grid">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-md max-mobile:grid-cols-1">
           {filteredItems.length === 0 ? (
-            <div className="home-empty">
+            <div className="text-center p-2xl text-text-muted italic col-span-full">
               Nenhum item cadastrado
             </div>
           ) : (
             filteredItems.map((item) => (
-              <div key={item.id} className={`home-item-card ${item.purchased ? 'home-item-purchased' : ''}`}>
-                <div className="home-item-header">
-                  <h3 className="home-item-name">{item.name}</h3>
-                  <span className="home-item-category">{item.category}</span>
+              <div key={item.id} className={`bg-surface-alt border border-border-light rounded-md p-md flex flex-col gap-sm transition-all duration-200 ease-[ease] hover:border-border ${item.purchased ? 'opacity-70' : ''}`}>
+                <div className="flex items-start justify-between gap-sm">
+                  <h3 className="font-serif text-[1rem] font-semibold text-text-primary">{item.name}</h3>
+                  <span className="text-[0.7rem] px-sm py-[2px] bg-primary-lighter text-primary rounded-[20px] font-medium whitespace-nowrap">{item.category}</span>
                 </div>
-                <div className="home-item-value">
+                <div className="text-[1.1rem] font-semibold text-text-primary">
                   {formatCurrency(item.estimatedValue)}
                 </div>
                 {item.notes && (
-                  <p className="home-item-notes">{item.notes}</p>
+                  <p className="text-[0.8rem] text-text-muted italic">{item.notes}</p>
                 )}
-                <div className="home-item-footer">
+                <div className="flex items-center justify-between mt-auto pt-sm border-t border-border-light">
                   <button
-                    className={`home-item-toggle ${item.purchased ? 'home-item-toggle-done' : ''}`}
+                    className={`text-[0.8rem] px-[12px] py-[4px] rounded-[20px] font-medium transition-all duration-200 ease-[ease] ${item.purchased ? 'bg-badge-done text-badge-done-text' : 'bg-badge-pending text-badge-pending-text hover:bg-badge-progress'}`}
                     onClick={() => togglePurchased(item.id)}
                   >
                     {item.purchased ? '✓ Comprado' : 'Pendente'}
                   </button>
-                  <div className="home-item-actions">
-                    <button className="home-action-btn" onClick={() => openEdit(item)} aria-label="Editar">
+                  <div className="flex gap-[4px]">
+                    <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface hover:text-text-primary" onClick={() => openEdit(item)} aria-label="Editar">
                       <Edit3 size={14} />
                     </button>
-                    <button className="home-action-btn home-action-btn-danger" onClick={() => handleDelete(item.id)} aria-label="Excluir">
+                    <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(item.id)} aria-label="Excluir">
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -187,7 +186,7 @@ function Casa() {
         onClose={() => setModalOpen(false)}
         title={editingItem ? 'Editar Item' : 'Novo Item'}
       >
-        <div className="home-modal-form">
+        <div className="flex flex-col gap-md">
           <div className="form-group">
             <label className="form-label" htmlFor="home-name">Nome</label>
             <input

@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import ImageUpload from '../../components/ImageUpload/ImageUpload';
 import { calculateOverallProgress, calculateDaysUntil } from '../../utils/calculations';
 import { Edit3, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
-import './style.css';
 
 function Casamento() {
   const { data, updateData } = useOutletContext();
@@ -63,7 +62,7 @@ function Casamento() {
   };
 
   return (
-    <div className="wedding" id="wedding">
+    <div className="p-xl max-w-[1200px] mx-auto max-nav:p-lg max-mobile:p-md" id="wedding">
       <div className="page-header-simple">
         <span className="page-header-tag">NOSSO CASAMENTO</span>
         <h1 className="page-header-title">Nosso Casamento</h1>
@@ -72,22 +71,22 @@ function Casamento() {
 
       {isAuthenticated && !editing && (
         <div className="admin-toolbar">
-          <button className="admin-btn-small" onClick={() => {
+          <button className="admin-btn-small max-mobile:w-full max-mobile:justify-center" onClick={() => {
             setFormData({ tagline: data.wedding.tagline, date: data.wedding.date });
             setEditing(true);
           }}>
             <Edit3 size={14} /> Editar página
           </button>
-          <button className="admin-btn-small" onClick={handleAddSection}>
+          <button className="admin-btn-small max-mobile:w-full max-mobile:justify-center" onClick={handleAddSection}>
             <Plus size={14} /> Adicionar seção
           </button>
         </div>
       )}
 
-      <div className="wedding-hero">
-        <div className="wedding-hero-content">
+      <div className="bg-surface border border-border-light rounded-lg p-2xl flex items-center gap-2xl mb-xl max-nav:flex-col max-nav:text-center max-nav:p-xl max-mobile:p-lg">
+        <div className="flex-1 min-w-0 max-nav:w-full">
           {editing ? (
-            <div className="wedding-edit-form">
+            <div className="flex flex-col gap-md w-full max-w-[500px]">
               <div className="form-group">
                 <label className="form-label">Texto de apresentação</label>
                 <textarea className="form-textarea" value={formData.tagline} onChange={e => setFormData({...formData, tagline: e.target.value})} rows={3} />
@@ -103,29 +102,29 @@ function Casamento() {
             </div>
           ) : (
             <>
-              <h1 className="wedding-hero-title">Nosso Casamento</h1>
-              <p className="wedding-hero-text">{data.wedding.tagline}</p>
-              <div className="wedding-hero-details">
-                <div className="wedding-detail-card">
-                  <span className="wedding-detail-label">Data</span>
-                  <span className="wedding-detail-value">{data.wedding.dateFormatted || 'A definir'}</span>
+              <h1 className="font-serif text-[2.5rem] font-bold text-text-primary mb-sm max-mobile:text-[1.5rem]">Nosso Casamento</h1>
+              <p className="text-[1rem] text-text-secondary leading-[1.6] mb-xl max-w-[600px] max-nav:mx-auto max-mobile:text-[0.9rem]">{data.wedding.tagline}</p>
+              <div className="flex gap-md flex-wrap max-nav:justify-center max-tiny:flex-col max-tiny:w-full">
+                <div className="bg-surface-alt border border-border-light rounded-md px-lg py-md flex flex-col gap-[4px] min-w-[120px] max-mobile:px-md max-mobile:py-sm max-mobile:min-w-[100px] max-tiny:w-full">
+                  <span className="text-[0.75rem] text-text-muted uppercase tracking-[0.5px]">Data</span>
+                  <span className="font-serif text-[1.1rem] font-semibold text-text-primary max-mobile:text-[1rem]">{data.wedding.dateFormatted || 'A definir'}</span>
                 </div>
                 {data.wedding.date && (
-                  <div className="wedding-detail-card">
-                    <span className="wedding-detail-label">Contagem regressiva</span>
-                    <span className="wedding-detail-value">{daysUntil} dias</span>
+                  <div className="bg-surface-alt border border-border-light rounded-md px-lg py-md flex flex-col gap-[4px] min-w-[120px] max-mobile:px-md max-mobile:py-sm max-mobile:min-w-[100px] max-tiny:w-full">
+                    <span className="text-[0.75rem] text-text-muted uppercase tracking-[0.5px]">Contagem regressiva</span>
+                    <span className="font-serif text-[1.1rem] font-semibold text-text-primary max-mobile:text-[1rem]">{daysUntil} dias</span>
                   </div>
                 )}
-                <div className="wedding-detail-card">
-                  <span className="wedding-detail-label">Progresso</span>
-                  <span className="wedding-detail-value">{overallProgress}%</span>
+                <div className="bg-surface-alt border border-border-light rounded-md px-lg py-md flex flex-col gap-[4px] min-w-[120px] max-mobile:px-md max-mobile:py-sm max-mobile:min-w-[100px] max-tiny:w-full">
+                  <span className="text-[0.75rem] text-text-muted uppercase tracking-[0.5px]">Progresso</span>
+                  <span className="font-serif text-[1.1rem] font-semibold text-text-primary max-mobile:text-[1rem]">{overallProgress}%</span>
                 </div>
               </div>
             </>
           )}
         </div>
 
-        <div className="wedding-hero-image">
+        <div className="w-[280px] h-[220px] shrink-0 rounded-md overflow-hidden max-nav:w-full max-nav:max-w-[400px] max-nav:h-[250px]">
           {isAuthenticated ? (
             <ImageUpload
               currentImage={data.wedding.dressPhotoUrl}
@@ -134,16 +133,16 @@ function Casamento() {
               description="Foto do vestido de noiva"
             />
           ) : data.wedding.dressPhotoUrl ? (
-            <img src={data.wedding.dressPhotoUrl} alt="Vestido de noiva" className="wedding-hero-img" />
+            <img src={data.wedding.dressPhotoUrl} alt="Vestido de noiva" className="w-full h-full object-cover rounded-md" />
           ) : (
-            <div className="wedding-hero-placeholder">Foto do vestido de noiva</div>
+            <div className="w-full h-full flex items-center justify-center bg-surface-alt border-2 border-dashed border-border rounded-md text-text-muted text-[0.9rem] text-center p-md cursor-pointer transition-all duration-200 ease-[ease] hover:border-primary hover:text-primary">Foto do vestido de noiva</div>
           )}
         </div>
       </div>
 
-      <div className="wedding-info-grid">
+      <div className="grid grid-cols-3 gap-md mt-xl max-lg:grid-cols-2 max-nav:grid-cols-1">
         {storyData.map((section, idx) => (
-          <div key={section.id} className="wedding-info-card story-card">
+          <div key={section.id} className="story-card">
             {isAuthenticated && (
               <div className="story-card-admin">
                 <button onClick={() => moveSection(section.id, -1)} disabled={idx === 0} title="Mover para cima"><ArrowUp size={14} /></button>
@@ -161,8 +160,8 @@ function Casamento() {
               </div>
             )}
             
-            <h3 className="wedding-info-title">{section.title}</h3>
-            <p className="wedding-info-text">{section.text}</p>
+            <h3 className="font-serif text-[1.1rem] font-semibold text-text-primary mb-sm">{section.title}</h3>
+            <p className="text-[0.9rem] text-text-secondary leading-[1.6]">{section.text}</p>
           </div>
         ))}
       </div>

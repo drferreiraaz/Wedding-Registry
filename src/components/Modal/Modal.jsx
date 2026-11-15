@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
-import './style.css';
 
 function Modal({ isOpen, onClose, title, children }) {
   const overlayRef = useRef(null);
