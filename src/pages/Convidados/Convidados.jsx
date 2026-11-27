@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { getGuestStats } from '../../utils/calculations';
-import { Plus, Trash2, Edit3, Search } from 'lucide-react';
+import { Plus, Trash2, Edit3, Search, Users } from 'lucide-react';
 
 function Convidados() {
   const { data, updateData } = useOutletContext();
@@ -26,8 +26,8 @@ function Convidados() {
 
   const filteredGuests = data.guests.filter((g) => {
     const matchRsvp = filterRsvp === 'Todos' || g.rsvp === filterRsvp;
-    const matchSearch = g.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      g.family.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchSearch = (g.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (g.family || '').toLowerCase().includes(searchTerm.toLowerCase());
     return matchRsvp && matchSearch;
   });
 
@@ -40,10 +40,10 @@ function Convidados() {
   const openEdit = (guest) => {
     setEditingGuest(guest);
     setFormData({
-      name: guest.name,
-      family: guest.family,
-      rsvp: guest.rsvp,
-      table: guest.table.toString(),
+      name: guest.name || '',
+      family: guest.family || '',
+      rsvp: guest.rsvp || 'Pendente',
+      table: (guest.table ?? '').toString(),
       notes: guest.notes || '',
     });
     setModalOpen(true);
@@ -75,6 +75,7 @@ function Convidados() {
   };
 
   const handleDelete = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir este convidado?')) return;
     updateData((prev) => ({
       ...prev,
       guests: prev.guests.filter((g) => g.id !== id),
@@ -137,7 +138,7 @@ function Convidados() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+          <table className="w-full min-w-[720px] border-collapse">
             <thead>
               <tr>
                 <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Nome</th>
@@ -151,8 +152,20 @@ function Convidados() {
             <tbody>
               {filteredGuests.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center p-xl text-text-muted italic">
-                    Nenhum convidado encontrado
+                  <td colSpan="6" className="p-xl">
+                    <div className="flex flex-col items-center gap-sm text-text-muted">
+                      <Users size={28} className="text-border" />
+                      <p className="italic text-[0.9rem]">
+                        {data.guests.length === 0
+                          ? 'Nenhum convidado cadastrado ainda.'
+                          : 'Nenhum convidado encontrado com esse filtro.'}
+                      </p>
+                      {data.guests.length === 0 && isAuthenticated && (
+                        <button className="empty-state-btn" onClick={openNew}>
+                          + Adicionar convidado
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -265,7 +278,7 @@ function Convidados() {
               <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>
                 Cancelar
               </button>
-              <button className="form-btn form-btn-primary" onClick={handleSave}>
+              <button className="form-btn form-btn-primary" onClick={handleSave} disabled={!formData.name.trim()}>
                 {editingGuest ? 'Salvar' : 'Adicionar'}
               </button>
             </div>

@@ -39,10 +39,10 @@ function Casa() {
   const openEdit = (item) => {
     setEditingItem(item);
     setFormData({
-      name: item.name,
-      category: item.category,
-      estimatedValue: item.estimatedValue.toString(),
-      purchased: item.purchased,
+      name: item.name || '',
+      category: item.category || 'Sala',
+      estimatedValue: (item.estimatedValue ?? '').toString(),
+      purchased: !!item.purchased,
       notes: item.notes || '',
     });
     setModalOpen(true);
@@ -80,6 +80,7 @@ function Casa() {
   };
 
   const handleDelete = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir este item?')) return;
     updateData((prev) => ({
       ...prev,
       home: {
@@ -147,8 +148,16 @@ function Casa() {
 
         <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-md max-mobile:grid-cols-1">
           {filteredItems.length === 0 ? (
-            <div className="text-center p-2xl text-text-muted italic col-span-full">
-              Nenhum item cadastrado
+            <div className="text-center p-2xl text-text-muted italic col-span-full flex flex-col items-center gap-sm">
+              <Home size={28} className="text-border" />
+              <p className="text-[0.9rem]">
+                {data.home.items.length === 0
+                  ? 'Nenhum item cadastrado ainda.'
+                  : 'Nenhum item encontrado nessa categoria.'}
+              </p>
+              {data.home.items.length === 0 && isAuthenticated && (
+                <button className="empty-state-btn not-italic" onClick={openNew}>+ Adicionar item</button>
+              )}
             </div>
           ) : (
             filteredItems.map((item) => (
@@ -251,7 +260,7 @@ function Casa() {
               <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>
                 Cancelar
               </button>
-              <button className="form-btn form-btn-primary" onClick={handleSave}>
+              <button className="form-btn form-btn-primary" onClick={handleSave} disabled={!formData.name.trim()}>
                 {editingItem ? 'Salvar' : 'Adicionar'}
               </button>
             </div>

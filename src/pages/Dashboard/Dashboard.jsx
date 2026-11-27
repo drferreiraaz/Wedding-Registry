@@ -15,6 +15,17 @@ function Dashboard() {
   const overallProgress = calculateOverallProgress(data.phases);
   const daysUntil = data.wedding.date ? calculateDaysUntil(data.wedding.date) : 0;
 
+  const formattedDate = React.useMemo(() => {
+    if (!data.wedding.date) return 'A definir';
+    try {
+      const date = new Date(data.wedding.date + 'T00:00:00');
+      if (isNaN(date.getTime())) return 'A definir';
+      return date.toLocaleDateString('pt-BR');
+    } catch {
+      return 'A definir';
+    }
+  }, [data.wedding.date]);
+
   const handlePhotoUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file || !file.type.startsWith('image/') || file.size > 3 * 1024 * 1024) {
@@ -37,7 +48,7 @@ function Dashboard() {
             <div className="flex items-center gap-sm px-md py-sm bg-surface-alt border border-border-light rounded-sm w-fit mb-sm">
               <Calendar size={16} />
               <span className="text-[0.9rem] text-text-primary font-medium">
-                {data.wedding.dateFormatted || 'Data não definida'}
+                {formattedDate}
               </span>
             </div>
             {data.wedding.date && (

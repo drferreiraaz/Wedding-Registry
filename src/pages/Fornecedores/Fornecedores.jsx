@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { formatCurrency } from '../../utils/calculations';
-import { Plus, Trash2, Edit3 } from 'lucide-react';
+import { Plus, Trash2, Edit3, Store } from 'lucide-react';
 
 function Fornecedores() {
   const { data, updateData } = useOutletContext();
@@ -39,15 +39,15 @@ function Fornecedores() {
   const openEdit = (supplier) => {
     setEditingSupplier(supplier);
     setFormData({
-      name: supplier.name,
-      category: supplier.category,
-      contact: supplier.contact,
-      value: supplier.value.toString(),
-      entry: supplier.entry.toString(),
-      installments: supplier.installments.toString(),
-      dueDate: supplier.dueDate,
-      status: supplier.status,
-      contract: supplier.contract,
+      name: supplier.name || '',
+      category: supplier.category || '',
+      contact: supplier.contact || '',
+      value: (supplier.value ?? '').toString(),
+      entry: (supplier.entry ?? '').toString(),
+      installments: (supplier.installments ?? '').toString(),
+      dueDate: supplier.dueDate || '',
+      status: supplier.status || 'Pesquisando',
+      contract: !!supplier.contract,
     });
     setModalOpen(true);
   };
@@ -90,6 +90,7 @@ function Fornecedores() {
   };
 
   const handleDelete = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir este fornecedor?')) return;
     updateData((prev) => ({
       ...prev,
       suppliers: prev.suppliers.filter((s) => s.id !== id),
@@ -135,8 +136,16 @@ function Fornecedores() {
 
         <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-md max-mobile:grid-cols-1">
           {filteredSuppliers.length === 0 ? (
-            <div className="text-center p-2xl text-text-muted italic col-span-full">
-              Nenhum fornecedor encontrado
+            <div className="text-center p-2xl text-text-muted italic col-span-full flex flex-col items-center gap-sm">
+              <Store size={28} className="text-border" />
+              <p className="text-[0.9rem]">
+                {data.suppliers.length === 0
+                  ? 'Nenhum fornecedor cadastrado ainda.'
+                  : 'Nenhum fornecedor encontrado com esse filtro.'}
+              </p>
+              {data.suppliers.length === 0 && isAuthenticated && (
+                <button className="empty-state-btn not-italic" onClick={openNew}>+ Adicionar fornecedor</button>
+              )}
             </div>
           ) : (
             filteredSuppliers.map((supplier) => (
@@ -331,7 +340,7 @@ function Fornecedores() {
               <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>
                 Cancelar
               </button>
-              <button className="form-btn form-btn-primary" onClick={handleSave}>
+              <button className="form-btn form-btn-primary" onClick={handleSave} disabled={!formData.name.trim()}>
                 {editingSupplier ? 'Salvar' : 'Adicionar'}
               </button>
             </div>
