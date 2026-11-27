@@ -3,7 +3,6 @@ import { useOutletContext } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ImageUpload from '../../components/ImageUpload/ImageUpload';
 import { Plus, Trash2, Edit3, ArrowUp, ArrowDown } from 'lucide-react';
-import './style.css';
 
 function NossaHistoria() {
   const { data, updateData } = useOutletContext();
@@ -46,7 +45,7 @@ function NossaHistoria() {
   };
 
   return (
-    <div className="nossa-historia-page">
+    <div className="p-xl max-w-[900px] max-mobile:p-md">
       <div className="page-header-simple">
         <span className="page-header-tag">NOSSA HISTÓRIA</span>
         <h1 className="page-header-title">Nossa História</h1>
@@ -67,7 +66,7 @@ function NossaHistoria() {
           {isAuthenticated && <button className="empty-state-btn" onClick={handleAddSection}>+ Adicionar seção</button>}
         </div>
       ) : (
-        <div className="story-list">
+        <div className="flex flex-col gap-lg">
           {data.ourStory.map((section, idx) => (
             <div key={section.id} className="story-card">
               {isAuthenticated && (
@@ -95,8 +94,8 @@ function NossaHistoria() {
                 </div>
               )}
               
-              <h3 className="story-card-title">{section.title}</h3>
-              <p className="story-card-text">{section.text}</p>
+              <h3 className="font-serif text-[1.3rem] font-semibold text-text-primary mb-sm">{section.title}</h3>
+              <p className="text-[0.95rem] text-text-secondary leading-[1.7]">{section.text}</p>
             </div>
           ))}
         </div>
