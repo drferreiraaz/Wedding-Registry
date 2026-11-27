@@ -43,16 +43,16 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-icon">
+    <div className="min-h-screen flex items-center justify-center bg-background p-md">
+      <div className="bg-surface border border-border-light rounded-lg p-2xl w-full max-w-[400px] text-center shadow-md">
+        <div className="w-16 h-16 bg-primary-lighter text-primary rounded-full flex items-center justify-center mx-auto mb-md">
           <Lock size={32} />
         </div>
-        <h1 className="login-title">Área dos Noivos</h1>
-        <p className="login-subtitle">Entre para gerenciar o nosso casamento.</p>
+        <h1 className="font-serif text-[1.5rem] font-semibold text-text-primary mb-xs">Área dos Noivos</h1>
+        <p className="text-[0.9rem] text-text-secondary mb-xl">Entre para gerenciar o nosso casamento.</p>
         
-        <form onSubmit={handleSubmit} className="login-form" autoComplete="off">
-          {error && <div className="login-error">{error}</div>}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-md text-left" autoComplete="off">
+          {error && <div className="bg-badge-high text-badge-high-text p-sm rounded-sm text-[0.85rem] text-center">{error}</div>}
           
           <div className="form-group">
             <label className="form-label" htmlFor="email">E-mail</label>
@@ -82,7 +82,7 @@ function Login() {
           
           <button 
             type="submit" 
-            className="login-btn"
+            className="w-full p-[12px] bg-primary text-white rounded-sm text-[0.9rem] font-semibold mt-sm transition-colors duration-200 ease-[ease] hover:bg-primary-hover disabled:opacity-60 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? 'Entrando...' : 'Entrar'}
@@ -90,9 +90,9 @@ function Login() {
         </form>
 
         {/* Divisor visual */}
-        <div className="flex items-center gap-3 my-4">
+        <div className="flex items-center gap-sm my-lg">
           <div className="flex-1 h-px bg-border"></div>
-          <span className="text-xs text-text-muted">ou</span>
+          <span className="text-[0.75rem] text-text-muted uppercase tracking-wider">ou</span>
           <div className="flex-1 h-px bg-border"></div>
         </div>
 
@@ -101,9 +101,9 @@ function Login() {
           type="button"
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-white border border-border rounded-md text-text-primary font-medium hover:bg-surface-alt transition-colors disabled:opacity-50 cursor-pointer"
+          className="w-full flex items-center justify-center gap-sm py-[12px] px-md bg-white border border-border rounded-sm text-[0.9rem] font-semibold text-text-primary transition-colors duration-200 ease-[ease] hover:bg-surface-alt disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -112,7 +112,7 @@ function Login() {
           Entrar com Google
         </button>
         
-        <button className="login-back" onClick={() => navigate('/')}>
+        <button className="mt-lg text-[0.85rem] text-text-muted underline hover:text-text-primary" onClick={() => navigate('/')}>
           Voltar ao site
         </button>
       </div>
