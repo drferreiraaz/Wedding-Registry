@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import TaskCard from '../../components/TaskCard/TaskCard';
 import Modal from '../../components/Modal/Modal';
@@ -8,6 +9,7 @@ import { ChevronDown, ChevronRight, Plus } from 'lucide-react';
 
 function Planejamento() {
   const { data, updateData } = useOutletContext();
+  const { isAuthenticated } = useAuth();
   const [expandedPhase, setExpandedPhase] = useState(data.phases[0]?.id);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
@@ -155,17 +157,20 @@ function Planejamento() {
                           task={task}
                           onToggle={(taskId) => toggleTask(phase.id, taskId)}
                           onEdit={(t) => openEditTask(phase.id, t)}
+                          readOnly={!isAuthenticated}
                         />
                       ))}
                     </div>
 
-                    <button
-                      className="flex items-center gap-sm px-md py-sm text-[0.85rem] text-text-secondary rounded-sm transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary"
-                      onClick={() => openNewTask(phase.id)}
-                    >
-                      <Plus size={16} />
-                      <span>Nova Tarefa</span>
-                    </button>
+                    {isAuthenticated && (
+                      <button
+                        className="flex items-center gap-sm px-md py-sm text-[0.85rem] text-text-secondary rounded-sm transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary"
+                        onClick={() => openNewTask(phase.id)}
+                      >
+                        <Plus size={16} />
+                        <span>Nova Tarefa</span>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

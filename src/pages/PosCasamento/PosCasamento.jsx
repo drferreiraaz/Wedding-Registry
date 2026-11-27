@@ -1,11 +1,13 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import { calculatePostWeddingProgress } from '../../utils/calculations';
 import { CheckCircle, Circle, Heart } from 'lucide-react';
 
 function PosCasamento() {
   const { data, updateData } = useOutletContext();
+  const { isAuthenticated } = useAuth();
   const postProgress = calculatePostWeddingProgress(data.postWedding.tasks);
   const allDone = postProgress === 100;
 
@@ -56,7 +58,8 @@ function PosCasamento() {
                 <div key={task.id} className={`flex items-center gap-md p-md bg-surface-alt border border-border-light rounded-md transition-all duration-200 ease-[ease] hover:border-border ${task.completed ? 'opacity-60' : ''}`}>
                   <button
                     className="shrink-0 bg-transparent border-none cursor-pointer p-0 flex items-center group"
-                    onClick={() => toggleTask(task.id)}
+                    onClick={() => isAuthenticated && toggleTask(task.id)}
+                    disabled={!isAuthenticated}
                     aria-label={task.completed ? 'Desmarcar' : 'Marcar como feito'}
                   >
                     {task.completed ? (

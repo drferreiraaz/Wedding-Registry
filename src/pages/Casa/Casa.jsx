@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { calculateHomeProgress, formatCurrency } from '../../utils/calculations';
@@ -7,6 +8,7 @@ import { Plus, Trash2, Edit3, Home } from 'lucide-react';
 
 function Casa() {
   const { data, updateData } = useOutletContext();
+  const { isAuthenticated } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [filterCategory, setFilterCategory] = useState('Todas');
@@ -134,10 +136,12 @@ function Casa() {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
-              <Plus size={16} />
-              <span>Novo Item</span>
-            </button>
+            {isAuthenticated && (
+              <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
+                <Plus size={16} />
+                <span>Novo Item</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -162,18 +166,21 @@ function Casa() {
                 <div className="flex items-center justify-between mt-auto pt-sm border-t border-border-light">
                   <button
                     className={`text-[0.8rem] px-[12px] py-[4px] rounded-[20px] font-medium transition-all duration-200 ease-[ease] ${item.purchased ? 'bg-badge-done text-badge-done-text' : 'bg-badge-pending text-badge-pending-text hover:bg-badge-progress'}`}
-                    onClick={() => togglePurchased(item.id)}
+                    onClick={() => isAuthenticated && togglePurchased(item.id)}
+                    disabled={!isAuthenticated}
                   >
                     {item.purchased ? '✓ Comprado' : 'Pendente'}
                   </button>
-                  <div className="flex gap-[4px]">
-                    <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface hover:text-text-primary" onClick={() => openEdit(item)} aria-label="Editar">
-                      <Edit3 size={14} />
-                    </button>
-                    <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(item.id)} aria-label="Excluir">
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
+                  {isAuthenticated && (
+                    <div className="flex gap-[4px]">
+                      <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface hover:text-text-primary" onClick={() => openEdit(item)} aria-label="Editar">
+                        <Edit3 size={14} />
+                      </button>
+                      <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(item.id)} aria-label="Excluir">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))

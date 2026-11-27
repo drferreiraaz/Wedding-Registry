@@ -1,12 +1,13 @@
 import React from 'react';
 import { Calendar, Users, CheckCircle } from 'lucide-react';
 
-function TaskCard({ task, onToggle, onEdit }) {
+function TaskCard({ task, onToggle, onEdit, readOnly = false }) {
   return (
     <div className={`flex items-start gap-sm p-md bg-surface border border-border-light rounded-md transition-all duration-200 ease-[ease] hover:border-border ${task.completed ? 'opacity-60' : ''}`}>
       <button
         className="shrink-0 mt-[2px] bg-transparent border-none cursor-pointer p-0"
         onClick={() => onToggle(task.id)}
+        disabled={readOnly}
         aria-label={task.completed ? 'Desmarcar tarefa' : 'Marcar tarefa como concluída'}
       >
         {task.completed ? (
@@ -36,7 +37,7 @@ function TaskCard({ task, onToggle, onEdit }) {
         </div>
       </div>
 
-      {onEdit && (
+      {onEdit && !readOnly && (
         <button className="shrink-0 p-[4px] text-text-muted rounded-sm transition-colors duration-200 ease-[ease] hover:text-text-primary" onClick={() => onEdit(task)} aria-label="Editar tarefa">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="5" r="1" />

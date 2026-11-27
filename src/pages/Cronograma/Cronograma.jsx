@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { CheckCircle, Circle, Plus, Trash2, Edit3 } from 'lucide-react';
 
 function Cronograma() {
   const { data, updateData } = useOutletContext();
+  const { isAuthenticated } = useAuth();
   const [expandedItem, setExpandedItem] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -135,12 +137,14 @@ function Cronograma() {
     <div className="p-xl max-w-[800px] max-mobile:p-md" id="timeline">
       <PageHeader title="Cronograma" subtitle="Linha do tempo do planejamento" />
 
-      <div className="flex justify-end mb-lg">
-        <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNewItem}>
-          <Plus size={16} />
-          <span>Novo Marco</span>
-        </button>
-      </div>
+      {isAuthenticated && (
+        <div className="flex justify-end mb-lg">
+          <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNewItem}>
+            <Plus size={16} />
+            <span>Novo Marco</span>
+          </button>
+        </div>
+      )}
 
       <div className="relative pl-lg">
         <div className="absolute left-[7px] top-[20px] bottom-[20px] w-[2px] bg-border-light" aria-hidden="true" />
@@ -181,14 +185,16 @@ function Cronograma() {
 
                   {isExpanded && (
                     <div className="flex flex-col gap-sm px-lg pb-md pt-md border-t border-border-light">
-                      <div className="flex gap-[4px] mb-sm pb-sm border-b border-border-light">
-                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openEditItem(item)}>
-                          <Edit3 size={14} />
-                        </button>
-                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDeleteItem(item.id)}>
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
+                      {isAuthenticated && (
+                        <div className="flex gap-[4px] mb-sm pb-sm border-b border-border-light">
+                          <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openEditItem(item)}>
+                            <Edit3 size={14} />
+                          </button>
+                          <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDeleteItem(item.id)}>
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      )}
 
                       {item.tasks.map((task, taskIndex) => {
                         const key = `${item.id}-${taskIndex}`;
@@ -197,7 +203,8 @@ function Cronograma() {
                           <div key={key} className="group flex items-center gap-sm py-sm">
                             <button
                               className="shrink-0 bg-transparent border-none cursor-pointer p-0 flex items-center"
-                              onClick={() => toggleTaskInItem(item.id, taskIndex)}
+                              onClick={() => isAuthenticated && toggleTaskInItem(item.id, taskIndex)}
+                              disabled={!isAuthenticated}
                               aria-label={isDone ? 'Desmarcar' : 'Marcar como feito'}
                             >
                               {isDone ? (
@@ -209,22 +216,26 @@ function Cronograma() {
                             <span className={`flex-1 text-[0.9rem] ${isDone ? 'line-through text-text-muted' : 'text-text-primary'}`}>
                               {task}
                             </span>
-                            <div className="flex gap-[2px] opacity-0 transition-opacity duration-200 ease-[ease] group-hover:opacity-100">
-                              <button className="flex items-center justify-center w-6 h-6 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openEditTask(item.id, taskIndex)}>
-                                <Edit3 size={12} />
-                              </button>
-                              <button className="flex items-center justify-center w-6 h-6 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDeleteTask(item.id, taskIndex)}>
-                                <Trash2 size={12} />
-                              </button>
-                            </div>
+                            {isAuthenticated && (
+                              <div className="flex gap-[2px] opacity-0 transition-opacity duration-200 ease-[ease] group-hover:opacity-100">
+                                <button className="flex items-center justify-center w-6 h-6 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openEditTask(item.id, taskIndex)}>
+                                  <Edit3 size={12} />
+                                </button>
+                                <button className="flex items-center justify-center w-6 h-6 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDeleteTask(item.id, taskIndex)}>
+                                  <Trash2 size={12} />
+                                </button>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
 
-                      <button className="flex items-center gap-sm px-md py-sm mt-sm text-[0.8rem] text-text-muted rounded-sm transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openNewTask(item.id)}>
-                        <Plus size={14} />
-                        <span>Adicionar tarefa</span>
-                      </button>
+                      {isAuthenticated && (
+                        <button className="flex items-center gap-sm px-md py-sm mt-sm text-[0.8rem] text-text-muted rounded-sm transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-primary" onClick={() => openNewTask(item.id)}>
+                          <Plus size={14} />
+                          <span>Adicionar tarefa</span>
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>

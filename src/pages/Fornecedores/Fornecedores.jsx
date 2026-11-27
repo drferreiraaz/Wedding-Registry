@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { formatCurrency } from '../../utils/calculations';
@@ -7,6 +8,7 @@ import { Plus, Trash2, Edit3 } from 'lucide-react';
 
 function Fornecedores() {
   const { data, updateData } = useOutletContext();
+  const { isAuthenticated } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [filterStatus, setFilterStatus] = useState('Todos');
@@ -122,10 +124,12 @@ function Fornecedores() {
               <option value="Contratado">Contratado</option>
               <option value="Pago">Pago</option>
             </select>
-            <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
-              <Plus size={16} />
-              <span>Novo Fornecedor</span>
-            </button>
+            {isAuthenticated && (
+              <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
+                <Plus size={16} />
+                <span>Novo Fornecedor</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -184,14 +188,16 @@ function Fornecedores() {
                   </div>
                 </div>
 
-                <div className="flex gap-[4px] pt-sm border-t border-border-light">
-                  <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface hover:text-text-primary" onClick={() => openEdit(supplier)} aria-label="Editar">
-                    <Edit3 size={14} />
-                  </button>
-                  <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(supplier.id)} aria-label="Excluir">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
+                {isAuthenticated && (
+                  <div className="flex gap-[4px] pt-sm border-t border-border-light">
+                    <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface hover:text-text-primary" onClick={() => openEdit(supplier)} aria-label="Editar">
+                      <Edit3 size={14} />
+                    </button>
+                    <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(supplier.id)} aria-label="Excluir">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                )}
               </div>
             ))
           )}

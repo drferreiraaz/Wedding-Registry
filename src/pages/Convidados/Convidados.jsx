@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { getGuestStats } from '../../utils/calculations';
@@ -7,6 +8,7 @@ import { Plus, Trash2, Edit3, Search } from 'lucide-react';
 
 function Convidados() {
   const { data, updateData } = useOutletContext();
+  const { isAuthenticated } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState(null);
   const [filterRsvp, setFilterRsvp] = useState('Todos');
@@ -125,10 +127,12 @@ function Convidados() {
               <option value="Pendente">Pendentes</option>
               <option value="Recusou">Recusaram</option>
             </select>
-            <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
-              <Plus size={16} />
-              <span>Novo Convidado</span>
-            </button>
+            {isAuthenticated && (
+              <button className="flex items-center gap-sm px-md py-sm bg-primary text-white rounded-sm text-[0.85rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={openNew}>
+                <Plus size={16} />
+                <span>Novo Convidado</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -164,14 +168,16 @@ function Convidados() {
                     <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">{guest.table > 0 ? guest.table : '-'}</td>
                     <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">{guest.notes || '-'}</td>
                     <td className="p-md text-[0.875rem] text-text-primary border-b border-border-light">
-                      <div className="flex gap-[4px]">
-                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-text-primary" onClick={() => openEdit(guest)} aria-label="Editar">
-                          <Edit3 size={14} />
-                        </button>
-                        <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(guest.id)} aria-label="Excluir">
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
+                      {isAuthenticated && (
+                        <div className="flex gap-[4px]">
+                          <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-surface-alt hover:text-text-primary" onClick={() => openEdit(guest)} aria-label="Editar">
+                            <Edit3 size={14} />
+                          </button>
+                          <button className="flex items-center justify-center w-7 h-7 rounded-sm text-text-muted transition-all duration-200 ease-[ease] hover:bg-badge-high hover:text-badge-high-text" onClick={() => handleDelete(guest.id)} aria-label="Excluir">
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))
