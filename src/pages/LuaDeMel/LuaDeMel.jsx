@@ -36,22 +36,32 @@ function LuaDeMel() {
 
   const openEdit = (item) => {
     setEditingItem(item);
-    setFormData({ ...item });
+    setFormData({
+      name: item.name || '',
+      estimatedValue: (item.estimatedValue ?? '').toString(),
+      completed: !!item.completed,
+      notes: item.notes || '',
+    });
     setModalOpen(true);
   };
 
   const handleSaveItem = () => {
     if (!formData.name.trim()) return;
+    const normalized = {
+      ...formData,
+      estimatedValue: parseFloat(formData.estimatedValue) || 0,
+    };
     updateData(prev => {
       if (editingItem) {
-        return { ...prev, honeymoon: { ...prev.honeymoon, items: prev.honeymoon.items.map(i => i.id === editingItem.id ? { ...formData, id: editingItem.id } : i) } };
+        return { ...prev, honeymoon: { ...prev.honeymoon, items: prev.honeymoon.items.map(i => i.id === editingItem.id ? { ...normalized, id: editingItem.id } : i) } };
       }
-      return { ...prev, honeymoon: { ...prev.honeymoon, items: [...prev.honeymoon.items, { id: `hm-${Date.now()}`, ...formData }] } };
+      return { ...prev, honeymoon: { ...prev.honeymoon, items: [...prev.honeymoon.items, { id: `hm-${Date.now()}`, ...normalized }] } };
     });
     setModalOpen(false);
   };
 
   const handleDeleteItem = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir este item?')) return;
     updateData(prev => ({ ...prev, honeymoon: { ...prev.honeymoon, items: prev.honeymoon.items.filter(i => i.id !== id) } }));
   };
 
@@ -72,6 +82,7 @@ function LuaDeMel() {
 
       {!isPlanned && !isAuthenticated ? (
         <div className="empty-state">
+          <Plane size={32} className="mx-auto mb-sm text-border" />
           <p>Nossa lua de mel ainda não foi planejada.</p>
         </div>
       ) : (
@@ -139,9 +150,10 @@ function LuaDeMel() {
 
             <div className="flex flex-col gap-sm">
               {data.honeymoon.items.length === 0 ? (
-                <div className="text-center p-2xl text-text-muted italic">
-                  <p>Nenhum item cadastrado.</p>
-                  {isAuthenticated && <button className="empty-state-btn" onClick={openNew}>+ Adicionar item</button>}
+                <div className="text-center p-2xl text-text-muted italic flex flex-col items-center gap-sm">
+                  <Plane size={28} className="text-border" />
+                  <p className="text-[0.9rem]">Nenhum item cadastrado ainda.</p>
+                  {isAuthenticated && <button className="empty-state-btn not-italic" onClick={openNew}>+ Adicionar item</button>}
                 </div>
               ) : (
                 data.honeymoon.items.map((item) => (
@@ -189,7 +201,7 @@ function LuaDeMel() {
           <div />
           <div className="form-actions-right">
             <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>Cancelar</button>
-            <button className="form-btn form-btn-primary" onClick={handleSaveItem}>{editingItem ? 'Salvar' : 'Adicionar'}</button>
+            <button className="form-btn form-btn-primary" onClick={handleSaveItem} disabled={!formData.name.trim()}>{editingItem ? 'Salvar' : 'Adicionar'}</button>
           </div>
         </div>
       </Modal>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ImageUpload from '../../components/ImageUpload/ImageUpload';
-import { Plus, Trash2, Edit3 } from 'lucide-react';
+import { Plus, Trash2, Edit3, Users } from 'lucide-react';
 
 const roles = ['Florista', 'Daminha', 'Pajens', 'Segurança das alianças', 'Entrada das alianças', 'Leitura', 'Participante da cerimônia', 'Recepção', 'Outro'];
 
@@ -22,22 +22,35 @@ function Participantes() {
 
   const openEdit = (item) => {
     setEditing(item);
-    setFormData({ ...item });
+    setFormData({
+      name: item.name || '',
+      role: item.role || 'Outro',
+      age: (item.age ?? '').toString(),
+      order: item.order ?? 1,
+      notes: item.notes || '',
+      photoUrl: item.photoUrl || null,
+    });
     setModalOpen(true);
   };
 
   const handleSave = () => {
     if (!formData.name.trim()) return;
+    const normalized = {
+      ...formData,
+      age: formData.age === '' ? '' : parseInt(formData.age, 10) || '',
+      order: parseInt(formData.order, 10) || 1,
+    };
     updateData(prev => {
       if (editing) {
-        return { ...prev, participants: prev.participants.map(p => p.id === editing.id ? { ...formData, id: editing.id } : p) };
+        return { ...prev, participants: prev.participants.map(p => p.id === editing.id ? { ...normalized, id: editing.id } : p) };
       }
-      return { ...prev, participants: [...prev.participants, { id: `part-${Date.now()}`, ...formData }] };
+      return { ...prev, participants: [...prev.participants, { id: `part-${Date.now()}`, ...normalized }] };
     });
     setModalOpen(false);
   };
 
   const handleDelete = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir este participante?')) return;
     updateData(prev => ({ ...prev, participants: prev.participants.filter(p => p.id !== id) }));
   };
 
@@ -63,6 +76,7 @@ function Participantes() {
       
       {sortedParticipants.length === 0 ? (
         <div className="empty-state">
+          <Users size={32} className="mx-auto mb-sm text-border" />
           <p>Nenhum participante cadastrado.</p>
           {isAuthenticated && <button className="empty-state-btn" onClick={openNew}>+ Adicionar participante</button>}
         </div>
@@ -81,7 +95,7 @@ function Participantes() {
                 )}
               </div>
               <div className="w-12 h-12 rounded-full overflow-hidden shrink-0">
-                {p.photoUrl ? <img src={p.photoUrl} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center bg-primary-lighter text-primary font-semibold">{p.name.charAt(0)}</div>}
+                {p.photoUrl ? <img src={p.photoUrl} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center bg-primary-lighter text-primary font-semibold">{(p.name || '?').charAt(0)}</div>}
               </div>
               <div className="flex-1">
                 <h4 className="text-[1rem] font-semibold text-text-primary mb-[4px]">{p.name} {p.age && <span className="text-[0.85rem] text-text-muted font-normal">({p.age} anos)</span>}</h4>
@@ -146,7 +160,7 @@ function Participantes() {
                 <div />
                 <div className="form-actions-right">
                   <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>Cancelar</button>
-                  <button className="form-btn form-btn-primary" onClick={handleSave}>{editing ? 'Salvar' : 'Adicionar'}</button>
+                  <button className="form-btn form-btn-primary" onClick={handleSave} disabled={!formData.name.trim()}>{editing ? 'Salvar' : 'Adicionar'}</button>
                 </div>
               </div>
             </div>

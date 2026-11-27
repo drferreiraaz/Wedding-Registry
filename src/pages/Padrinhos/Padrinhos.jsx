@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ImageUpload from '../../components/ImageUpload/ImageUpload';
-import { Plus, Trash2, Edit3 } from 'lucide-react';
+import { Plus, Trash2, Edit3, Heart } from 'lucide-react';
 
 function Padrinhos() {
   const { data, updateData } = useOutletContext();
@@ -19,7 +19,14 @@ function Padrinhos() {
 
   const openEdit = (item) => {
     setEditing(item);
-    setFormData({ ...item });
+    setFormData({
+      name: item.name || '',
+      side: item.side || 'Ambos',
+      type: item.type || 'Padrinho/Madrinha',
+      role: item.role || '',
+      notes: item.notes || '',
+      photoUrl: item.photoUrl || null,
+    });
     setModalOpen(true);
   };
 
@@ -35,6 +42,7 @@ function Padrinhos() {
   };
 
   const handleDelete = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir este padrinho/madrinha?')) return;
     updateData(prev => ({ ...prev, godparents: prev.godparents.filter(g => g.id !== id) }));
   };
 
@@ -48,6 +56,7 @@ function Padrinhos() {
       
       {data.godparents.length === 0 ? (
         <div className="empty-state">
+          <Heart size={32} className="mx-auto mb-sm text-border" />
           <p>Ainda não cadastramos nossos padrinhos.</p>
           {isAuthenticated && <button className="empty-state-btn" onClick={openNew}>+ Adicionar padrinho</button>}
         </div>
@@ -59,7 +68,7 @@ function Padrinhos() {
                 {godparent.photoUrl ? (
                   <img src={godparent.photoUrl} alt={godparent.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-primary-lighter text-primary font-serif text-[1.5rem] font-semibold">{godparent.name.charAt(0)}</div>
+                  <div className="w-full h-full flex items-center justify-center bg-primary-lighter text-primary font-serif text-[1.5rem] font-semibold">{(godparent.name || '?').charAt(0)}</div>
                 )}
               </div>
               <div className="flex flex-col items-center">
@@ -132,7 +141,7 @@ function Padrinhos() {
                 <div />
                 <div className="form-actions-right">
                   <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>Cancelar</button>
-                  <button className="form-btn form-btn-primary" onClick={handleSave}>{editing ? 'Salvar' : 'Adicionar'}</button>
+                  <button className="form-btn form-btn-primary" onClick={handleSave} disabled={!formData.name.trim()}>{editing ? 'Salvar' : 'Adicionar'}</button>
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
-import { CheckCircle, Circle, Plus, Trash2, Edit3 } from 'lucide-react';
+import { CheckCircle, Circle, Plus, Trash2, Edit3, CalendarDays } from 'lucide-react';
 
 function Cronograma() {
   const { data, updateData } = useOutletContext();
@@ -79,6 +79,7 @@ function Cronograma() {
   };
 
   const handleDeleteItem = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir este marco e todas as suas tarefas?')) return;
     updateData((prev) => ({
       ...prev,
       timeline: prev.timeline.filter((i) => i.id !== id),
@@ -97,7 +98,7 @@ function Cronograma() {
     if (!item) return;
     setCurrentTimelineId(timelineId);
     setEditingTask({ index: taskIndex, text: item.tasks[taskIndex] });
-    setTaskFormData({ text: item.tasks[taskIndex] });
+    setTaskFormData({ text: item.tasks[taskIndex] || '' });
     setTaskModalOpen(true);
   };
 
@@ -108,7 +109,7 @@ function Cronograma() {
       ...prev,
       timeline: prev.timeline.map((item) => {
         if (item.id !== currentTimelineId) return item;
-        const newTasks = [...item.tasks];
+        const newTasks = [...(item.tasks || [])];
         if (editingTask !== null) {
           newTasks[editingTask.index] = taskFormData.text;
         } else {
@@ -121,13 +122,22 @@ function Cronograma() {
   };
 
   const handleDeleteTask = (timelineId, taskIndex) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta tarefa?')) return;
     updateData((prev) => ({
       ...prev,
       timeline: prev.timeline.map((item) => {
         if (item.id !== timelineId) return item;
-        const newTasks = item.tasks.filter((_, i) => i !== taskIndex);
-        const key = `${timelineId}-${taskIndex}`;
-        const completedTasks = (item.completedTasks || []).filter((k) => k !== key);
+        const newTasks = (item.tasks || []).filter((_, i) => i !== taskIndex);
+        const prefix = `${timelineId}-`;
+        const completedTasks = (item.completedTasks || [])
+          .map((key) => {
+            if (!key.startsWith(prefix)) return key;
+            const index = parseInt(key.slice(prefix.length), 10);
+            if (Number.isNaN(index)) return key;
+            if (index === taskIndex) return null;
+            return index > taskIndex ? `${prefix}${index - 1}` : key;
+          })
+          .filter((key) => key !== null);
         return { ...item, tasks: newTasks, completedTasks };
       }),
     }));
@@ -149,15 +159,17 @@ function Cronograma() {
       <div className="relative pl-lg">
         <div className="absolute left-[7px] top-[20px] bottom-[20px] w-[2px] bg-border-light" aria-hidden="true" />
         {data.timeline.length === 0 ? (
-          <div className="text-center p-3xl text-text-muted">
+          <div className="text-center p-3xl text-text-muted flex flex-col items-center">
+            <CalendarDays size={32} className="mb-sm text-border" />
             <p className="text-[1rem] mb-sm">Nenhum marco no cronograma ainda.</p>
             <p className="text-[0.85rem] italic">Adicione marcos como "12 meses antes", "6 meses antes", etc.</p>
           </div>
         ) : (
           data.timeline.map((item) => {
+            const tasks = item.tasks || [];
             const completedTasks = item.completedTasks || [];
             const completedCount = completedTasks.length;
-            const totalCount = item.tasks.length;
+            const totalCount = tasks.length;
             const isExpanded = expandedItem === item.id;
 
             return (
@@ -196,7 +208,13 @@ function Cronograma() {
                         </div>
                       )}
 
-                      {item.tasks.map((task, taskIndex) => {
+                      {tasks.length === 0 && (
+                        <p className="text-[0.85rem] text-text-muted italic">
+                          Nenhuma tarefa neste marco ainda.
+                        </p>
+                      )}
+
+                      {tasks.map((task, taskIndex) => {
                         const key = `${item.id}-${taskIndex}`;
                         const isDone = completedTasks.includes(key);
                         return (
@@ -280,7 +298,7 @@ function Cronograma() {
               <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>
                 Cancelar
               </button>
-              <button className="form-btn form-btn-primary" onClick={handleSaveItem}>
+              <button className="form-btn form-btn-primary" onClick={handleSaveItem} disabled={!formData.label.trim()}>
                 {editingItem ? 'Salvar' : 'Adicionar'}
               </button>
             </div>
@@ -312,7 +330,7 @@ function Cronograma() {
               <button className="form-btn form-btn-secondary" onClick={() => setTaskModalOpen(false)}>
                 Cancelar
               </button>
-              <button className="form-btn form-btn-primary" onClick={handleSaveTask}>
+              <button className="form-btn form-btn-primary" onClick={handleSaveTask} disabled={!taskFormData.text.trim()}>
                 {editingTask ? 'Salvar' : 'Adicionar'}
               </button>
             </div>

@@ -235,7 +235,7 @@
   }
 
   .form-btn {
-    @apply px-[20px] py-[10px] rounded-sm text-[0.85rem] font-medium border-none cursor-pointer transition-all duration-200 ease-[ease];
+    @apply px-[20px] py-[10px] rounded-sm text-[0.85rem] font-medium border-none cursor-pointer transition-all duration-200 ease-[ease] disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .form-btn-primary {

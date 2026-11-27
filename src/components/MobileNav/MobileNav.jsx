@@ -87,7 +87,9 @@ function MobileNav({ couple, onReset, updateData }) {
         <nav className="px-md pb-md border-t border-[rgba(0,0,0,0.06)] max-h-[80vh] overflow-y-auto">
           <ul className="flex flex-col gap-[2px] pt-sm">
             {navItems.map((item) => {
-              const isActive = item.path === '/' ? location.pathname === '/' : location.pathname.startsWith(item.path);
+              const isActive = item.path === '/'
+                ? location.pathname === '/'
+                : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
               const Icon = item.icon;
               return (
                 <li key={item.path}>

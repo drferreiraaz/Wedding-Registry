@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import Modal from '../../components/Modal/Modal';
 import { formatCurrency, calculateTotalExpenses } from '../../utils/calculations';
-import { Plus, Trash2, Edit3 } from 'lucide-react';
+import { Plus, Trash2, Edit3, Wallet } from 'lucide-react';
 
 function Financeiro() {
   const { data, updateData } = useOutletContext();
@@ -56,11 +56,11 @@ function Financeiro() {
   const openEdit = (expense) => {
     setEditingExpense(expense);
     setFormData({
-      name: expense.name,
-      category: expense.category,
-      value: expense.value.toString(),
-      date: expense.date,
-      status: expense.status,
+      name: expense.name || '',
+      category: expense.category || 'Local',
+      value: (expense.value ?? '').toString(),
+      date: expense.date || '',
+      status: expense.status || 'Pendente',
       notes: expense.notes || '',
     });
     setModalOpen(true);
@@ -68,7 +68,7 @@ function Financeiro() {
 
   const handleSave = () => {
     if (!formData.name.trim() || !formData.value) return;
-    const value = parseFloat(formData.value);
+    const value = parseFloat(formData.value) || 0;
 
     updateData((prev) => {
       if (editingExpense) {
@@ -99,6 +99,7 @@ function Financeiro() {
   };
 
   const handleDelete = (id) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta despesa?')) return;
     updateData((prev) => ({
       ...prev,
       finances: {
@@ -123,7 +124,7 @@ function Financeiro() {
               className="w-[100px] px-sm py-[4px] border border-border rounded-sm text-[0.85rem] text-text-primary bg-surface focus:outline-none focus:border-primary"
               min="0"
             />
-            <button className="px-sm py-[4px] bg-primary text-white rounded-sm text-[0.75rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover" onClick={handleSaveBudget}>OK</button>
+            <button className="px-sm py-[4px] bg-primary text-white rounded-sm text-[0.75rem] font-medium transition-colors duration-200 ease-[ease] hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed" onClick={handleSaveBudget} disabled={tempBudget === ''}>OK</button>
             <button className="px-sm py-[4px] bg-surface-alt text-text-secondary border border-border rounded-sm text-[0.75rem] transition-colors duration-200 ease-[ease] hover:bg-border-light" onClick={() => setEditingBudget(false)}>✕</button>
           </div>
         ) : (
@@ -180,7 +181,7 @@ function Financeiro() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+          <table className="w-full min-w-[720px] border-collapse">
             <thead>
               <tr>
                 <th className="text-left px-md py-sm text-[0.75rem] font-semibold text-text-muted uppercase tracking-[0.5px] border-b border-border-light">Nome</th>
@@ -194,8 +195,20 @@ function Financeiro() {
             <tbody>
               {filteredExpenses.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center p-xl text-text-muted italic">
-                    Nenhuma despesa cadastrada
+                  <td colSpan="6" className="p-xl">
+                    <div className="flex flex-col items-center gap-sm text-text-muted">
+                      <Wallet size={28} className="text-border" />
+                      <p className="italic text-[0.9rem]">
+                        {data.finances.expenses.length === 0
+                          ? 'Nenhuma despesa cadastrada ainda.'
+                          : 'Nenhuma despesa encontrada nessa categoria.'}
+                      </p>
+                      {data.finances.expenses.length === 0 && isAuthenticated && (
+                        <button className="empty-state-btn" onClick={openNew}>
+                          + Adicionar despesa
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -323,7 +336,7 @@ function Financeiro() {
               <button className="form-btn form-btn-secondary" onClick={() => setModalOpen(false)}>
                 Cancelar
               </button>
-              <button className="form-btn form-btn-primary" onClick={handleSave}>
+              <button className="form-btn form-btn-primary" onClick={handleSave} disabled={!formData.name.trim() || !formData.value}>
                 {editingExpense ? 'Salvar' : 'Adicionar'}
               </button>
             </div>
